@@ -410,7 +410,6 @@ namespace nodetool
     if (testnet)
     {
       full_addrs.insert("node.fonero.org:28180");
-      full_addrs.insert("82.202.249.249:28180");
       full_addrs.insert("5.9.45.242:28180");
       full_addrs.insert("136.243.95.41:28180");
       full_addrs.insert("46.4.83.82:28180");
@@ -419,7 +418,6 @@ namespace nodetool
     else
     {
       full_addrs.insert("node.fonero.org:18180");
-      full_addrs.insert("82.202.249.249:28181");
       full_addrs.insert("5.9.45.242:18180");
       full_addrs.insert("136.243.95.41:18180");
       full_addrs.insert("46.4.83.82:18180");
