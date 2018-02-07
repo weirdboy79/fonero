@@ -1,6 +1,6 @@
-// Copyright (c) 2014-2018, The Monero Project
-//
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
@@ -48,9 +48,7 @@ namespace wallet_args
   boost::optional<boost::program_options::variables_map> main(
     int argc, char** argv,
     const char* const usage,
-    const char* const notice,
     boost::program_options::options_description desc_params,
     const boost::program_options::positional_options_description& positional_options,
-    const std::function<void(const std::string&, bool)> &print,
     const char *default_log_name, bool log_to_console = false);
 }

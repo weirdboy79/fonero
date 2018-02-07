@@ -1,21 +1,21 @@
-// Copyright (c) 2014-2018, The Monero Project
-// 
-// All rights reserved.
-// 
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
+//
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright notice, this list of
 //    conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright notice, this list
 //    of conditions and the following disclaimer in the documentation and/or other
 //    materials provided with the distribution.
-// 
+//
 // 3. Neither the name of the copyright holder nor the names of its contributors may be
 //    used to endorse or promote products derived from this software without specific
 //    prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
@@ -25,7 +25,7 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
 
 #pragma once
@@ -41,10 +41,10 @@
 namespace command_line
 {
 
+  std::string input_line(const std::string& prompt);
+
   //! \return True if `str` is `is_iequal("y" || "yes" || `tr("yes"))`.
   bool is_yes(const std::string& str);
-  //! \return True if `str` is `is_iequal("n" || "no" || `tr("no"))`.
-  bool is_no(const std::string& str);
 
   template<typename T, bool required = false>
   struct arg_descriptor;
@@ -189,19 +189,13 @@ namespace command_line
     return !value.empty();
   }
 
-  template<typename T, bool required>
-  bool is_arg_defaulted(const boost::program_options::variables_map& vm, const arg_descriptor<T, required>& arg)
-  {
-    return vm[arg.name].defaulted();
-  }
-
 
   template<typename T, bool required>
   T get_arg(const boost::program_options::variables_map& vm, const arg_descriptor<T, required>& arg)
   {
     return vm[arg.name].template as<T>();
   }
- 
+
   template<>
   inline bool has_arg<bool, false>(const boost::program_options::variables_map& vm, const arg_descriptor<bool, false>& arg)
   {
@@ -211,4 +205,19 @@ namespace command_line
 
   extern const arg_descriptor<bool> arg_help;
   extern const arg_descriptor<bool> arg_version;
+  extern const arg_descriptor<std::string> arg_data_dir;
+  extern const arg_descriptor<std::string> arg_testnet_data_dir;
+  extern const arg_descriptor<bool>		arg_test_drop_download;
+  extern const arg_descriptor<uint64_t>	arg_test_drop_download_height;
+  extern const arg_descriptor<int> 		arg_test_dbg_lock_sleep;
+  extern const arg_descriptor<bool, false> arg_testnet_on;
+  extern const arg_descriptor<bool> arg_dns_checkpoints;
+  extern const arg_descriptor<std::string> arg_db_type;
+  extern const arg_descriptor<std::string> arg_db_sync_mode;
+  extern const arg_descriptor<bool, false> arg_db_salvage;
+  extern const arg_descriptor<uint64_t> arg_fast_block_sync;
+  extern const arg_descriptor<uint64_t> arg_prep_blocks_threads;
+  extern const arg_descriptor<uint64_t> arg_show_time_stats;
+  extern const arg_descriptor<size_t> arg_block_sync_size;
+  extern const arg_descriptor<std::string> arg_check_updates;
 }

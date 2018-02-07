@@ -1,6 +1,6 @@
-# Copyright (c) 2014-2018, The Monero Project
-#
-# All rights reserved.
+# Copyright (c) 2017-2018, The Fonero Project.
+# Copyright (c) 2014-2017 The Monero Project.
+# Portions Copyright (c) 2012-2013 The Cryptonote developers.
 #
 # Redistribution and use in source and binary forms, with or without modification, are
 # permitted provided that the following conditions are met:
@@ -35,11 +35,9 @@ cmake-debug:
 debug: cmake-debug
 	cd build/debug && $(MAKE)
 
-# Temporarily disable some tests:
-#  * libwallet_api_tests fail (Issue #895)
 debug-test:
 	mkdir -p build/debug
-	cd build/debug && cmake -D BUILD_TESTS=ON -D CMAKE_BUILD_TYPE=Debug ../.. &&  $(MAKE) && $(MAKE) ARGS="-E libwallet_api_tests" test
+	cd build/debug && cmake -D BUILD_TESTS=ON -D CMAKE_BUILD_TYPE=Debug ../.. && $(MAKE) && $(MAKE) test
 
 debug-all:
 	mkdir -p build/debug
@@ -116,7 +114,7 @@ release-static-win32:
 
 fuzz:
 	mkdir -p build/fuzz
-	cd build/fuzz && cmake -D STATIC=ON -D SANITIZE=ON -D BUILD_TESTS=ON -D USE_LTO=OFF -D CMAKE_C_COMPILER=afl-gcc -D CMAKE_CXX_COMPILER=afl-g++ -D ARCH="x86-64" -D CMAKE_BUILD_TYPE=fuzz -D BUILD_TAG="linux-x64" ../.. && $(MAKE)
+	cd build/fuzz && cmake -D BUILD_TESTS=ON -D USE_LTO=OFF -D CMAKE_C_COMPILER=afl-gcc -D CMAKE_CXX_COMPILER=afl-g++ -D ARCH="x86-64" -D CMAKE_BUILD_TYPE=fuzz -D BUILD_TAG="linux-x64" ../.. && $(MAKE)
 
 clean:
 	@echo "WARNING: Back-up your wallet if it exists within ./build!" ; \

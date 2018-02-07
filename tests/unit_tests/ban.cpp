@@ -1,21 +1,21 @@
-// Copyright (c) 2014-2018, The Monero Project
-// 
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Fonero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 // 
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright notice, this list of
 //    conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright notice, this list
 //    of conditions and the following disclaimer in the documentation and/or other
 //    materials provided with the distribution.
-// 
+//
 // 3. Neither the name of the copyright holder nor the names of its contributors may be
 //    used to endorse or promote products derived from this software without specific
 //    prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
@@ -31,11 +31,9 @@
 #include "gtest/gtest.h"
 #include "cryptonote_core/cryptonote_core.h"
 #include "p2p/net_node.h"
-#include "p2p/net_node.inl"
 #include "cryptonote_protocol/cryptonote_protocol_handler.h"
-#include "cryptonote_protocol/cryptonote_protocol_handler.inl"
 
-#define MAKE_IPV4_ADDRESS(a,b,c,d) epee::net_utils::ipv4_network_address{MAKE_IP(a,b,c,d),0}
+#define MAKE_IPV4_ADDRESS(a,b,c,d) new epee::net_utils::ipv4_network_address(MAKE_IP(a,b,c,d),0)
 
 namespace cryptonote {
   class blockchain_storage;
@@ -53,7 +51,7 @@ public:
   bool get_short_chain_history(std::list<crypto::hash>& ids) const { return true; }
   bool get_stat_info(cryptonote::core_stat_info& st_inf) const {return true;}
   bool have_block(const crypto::hash& id) const {return true;}
-  void get_blockchain_top(uint64_t& height, crypto::hash& top_id)const{height=0;top_id=crypto::null_hash;}
+  bool get_blockchain_top(uint64_t& height, crypto::hash& top_id)const{height=0;top_id=cryptonote::null_hash;return true;}
   bool handle_incoming_tx(const cryptonote::blobdata& tx_blob, cryptonote::tx_verification_context& tvc, bool keeped_by_block, bool relayed, bool do_not_relay) { return true; }
   bool handle_incoming_txs(const std::list<cryptonote::blobdata>& tx_blob, std::vector<cryptonote::tx_verification_context>& tvc, bool keeped_by_block, bool relayed, bool do_not_relay) { return true; }
   bool handle_incoming_block(const cryptonote::blobdata& block_blob, cryptonote::block_verification_context& bvc, bool update_miner_blocktemplate = true) { return true; }
@@ -79,9 +77,6 @@ public:
   uint8_t get_ideal_hard_fork_version(uint64_t height) const { return 0; }
   uint8_t get_hard_fork_version(uint64_t height) const { return 0; }
   cryptonote::difficulty_type get_block_cumulative_difficulty(uint64_t height) const { return 0; }
-  bool fluffy_blocks_enabled() const { return false; }
-  uint64_t prevalidate_block_hashes(uint64_t height, const std::list<crypto::hash> &hashes) { return 0; }
-  void stop() {}
 };
 
 typedef nodetool::node_server<cryptonote::t_cryptonote_protocol_handler<test_core>> Server;
@@ -187,5 +182,3 @@ TEST(ban, add)
   ASSERT_TRUE(t >= 4);
 }
 
-namespace nodetool { template class node_server<cryptonote::t_cryptonote_protocol_handler<test_core>>; }
-namespace cryptonote { template class t_cryptonote_protocol_handler<test_core>; }

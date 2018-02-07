@@ -1,6 +1,6 @@
-# Copyright (c) 2014-2018, The Monero Project
-#
-# All rights reserved.
+# Copyright (c) 2017-2018, The Fonero Project.
+# Copyright (c) 2014-2017 The Monero Project.
+# Portions Copyright (c) 2012-2013 The Cryptonote developers.
 #
 # Redistribution and use in source and binary forms, with or without modification, are
 # permitted provided that the following conditions are met:
@@ -34,31 +34,30 @@ set(simplewallet_headers)
 set(simplewallet_private_headers
   simplewallet.h)
 
-monero_private_headers(simplewallet
+fonero_private_headers(simplewallet
   ${simplewallet_private_headers})
-monero_add_executable(simplewallet
+fonero_add_executable(simplewallet
   ${simplewallet_sources}
   ${simplewallet_headers}
   ${simplewallet_private_headers})
 target_link_libraries(simplewallet
   PRIVATE
     wallet
-    rpc_base
+    rpc
     cryptonote_core
     cncrypto
     common
     mnemonics
-    epee
-    ${EPEE_READLINE}
-    version
+    p2p
     ${Boost_CHRONO_LIBRARY}
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${Boost_FILESYSTEM_LIBRARY}
     ${Boost_THREAD_LIBRARY}
     ${CMAKE_THREAD_LIBS_INIT}
-    ${GNU_READLINE_LIBRARY}
     ${EXTRA_LIBRARIES})
+add_dependencies(simplewallet
+  version)
 set_property(TARGET simplewallet
   PROPERTY
-    OUTPUT_NAME "monero-wallet-cli")
+    OUTPUT_NAME "fonero-wallet-cli")
 install(TARGETS simplewallet DESTINATION bin)

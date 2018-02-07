@@ -1,6 +1,6 @@
-// Copyright (c) 2014-2018, The Monero Project
-//
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
@@ -28,8 +28,8 @@
 
 #include "blocksdat_file.h"
 
-#undef MONERO_DEFAULT_LOG_CATEGORY
-#define MONERO_DEFAULT_LOG_CATEGORY "bcutil"
+#undef FONERO_DEFAULT_LOG_CATEGORY
+#define FONERO_DEFAULT_LOG_CATEGORY "bcutil"
 
 namespace po = boost::program_options;
 
@@ -82,7 +82,7 @@ bool BlocksdatFile::open_writer(const boost::filesystem::path& file_path, uint64
 
 bool BlocksdatFile::initialize_file(uint64_t block_stop)
 {
-  const uint32_t nblocks = (block_stop + 1) / HASH_OF_HASHES_STEP;
+  const uint32_t nblocks = block_stop + 1;
   unsigned char nblocksc[4];
 
   nblocksc[0] = nblocks & 0xff;
@@ -101,16 +101,8 @@ bool BlocksdatFile::initialize_file(uint64_t block_stop)
 
 void BlocksdatFile::write_block(const crypto::hash& block_hash)
 {
-  m_hashes.push_back(block_hash);
-  while (m_hashes.size() >= HASH_OF_HASHES_STEP)
-  {
-    crypto::hash hash;
-    crypto::cn_fast_hash(m_hashes.data(), HASH_OF_HASHES_STEP * sizeof(crypto::hash), hash);
-    memmove(m_hashes.data(), m_hashes.data() + HASH_OF_HASHES_STEP * sizeof(crypto::hash), (m_hashes.size() - HASH_OF_HASHES_STEP) * sizeof(crypto::hash));
-    m_hashes.resize(m_hashes.size() - HASH_OF_HASHES_STEP);
-    const std::string data(hash.data, sizeof(hash));
-    *m_raw_data_file << data;
-  }
+  const std::string data(block_hash.data, sizeof(block_hash));
+  *m_raw_data_file << data;
 }
 
 bool BlocksdatFile::close()

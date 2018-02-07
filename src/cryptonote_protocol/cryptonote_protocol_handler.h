@@ -1,25 +1,21 @@
-/// @file
-/// @author rfree (current maintainer/user in monero.cc project - most of code is from CryptoNote)
-/// @brief This is the orginal cryptonote protocol network-events handler, modified by us
-
-// Copyright (c) 2014-2018, The Monero Project
-// 
-// All rights reserved.
-// 
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
+//
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright notice, this list of
 //    conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright notice, this list
 //    of conditions and the following disclaimer in the documentation and/or other
 //    materials provided with the distribution.
-// 
+//
 // 3. Neither the name of the copyright holder nor the names of its contributors may be
 //    used to endorse or promote products derived from this software without specific
 //    prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
@@ -29,13 +25,14 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
 
 #pragma once
 
 #include <boost/program_options/variables_map.hpp>
 #include <string>
+#include <ctime>
 
 #include "math_helper.h"
 #include "storages/levin_abstract_invoke2.h"
@@ -45,6 +42,8 @@
 #include "block_queue.h"
 #include "cryptonote_basic/connection_context.h"
 #include "cryptonote_basic/cryptonote_stat_info.h"
+#include "cryptonote_basic/verification_context.h"
+// #include <netinet/in.h>
 #include <boost/circular_buffer.hpp>
 
 PUSH_WARNINGS
@@ -72,7 +71,7 @@ namespace cryptonote
 
   template<class t_core>
   class t_cryptonote_protocol_handler:  public i_cryptonote_protocol, cryptonote_protocol_handler_base
-  { 
+  {
   public:
     typedef cryptonote_connection_context connection_context;
     typedef core_stat_info stat_info;
@@ -169,5 +168,8 @@ namespace cryptonote
   };
 
 } // namespace
+
+
+#include "cryptonote_protocol_handler.inl"
 
 POP_WARNINGS

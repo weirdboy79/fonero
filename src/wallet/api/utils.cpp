@@ -1,6 +1,6 @@
-// Copyright (c) 2014-2018, The Monero Project
-//
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
@@ -35,11 +35,11 @@
 
 using namespace std;
 
-namespace Monero {
+namespace Fonero {
 namespace Utils {
 
 bool isAddressLocal(const std::string &address)
-{ 
+{
     try {
         return tools::is_local_address(address);
     } catch (const std::exception &e) {
@@ -48,14 +48,7 @@ bool isAddressLocal(const std::string &address)
     }
 }
 
-void onStartup()
-{
-    tools::on_startup();
-}
-
 }
 
 
 } // namespace
-
-namespace Bitmonero = Monero;

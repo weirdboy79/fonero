@@ -1,21 +1,21 @@
-// Copyright (c) 2014-2018, The Monero Project
-// 
-// All rights reserved.
-// 
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
+//
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright notice, this list of
 //    conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright notice, this list
 //    of conditions and the following disclaimer in the documentation and/or other
 //    materials provided with the distribution.
-// 
+//
 // 3. Neither the name of the copyright holder nor the names of its contributors may be
 //    used to endorse or promote products derived from this software without specific
 //    prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
@@ -34,7 +34,7 @@
 
 namespace daemon_args
 {
-  std::string const WINDOWS_SERVICE_NAME = "Monero Daemon";
+  std::string const WINDOWS_SERVICE_NAME = "Fonero Daemon";
 
   const command_line::arg_descriptor<std::string> arg_config_file = {
     "config-file"
@@ -45,11 +45,6 @@ namespace daemon_args
     "log-file"
   , "Specify log file"
   , ""
-  };
-  const command_line::arg_descriptor<std::size_t> arg_max_log_file_size = {
-    "max-log-file-size"
-  , "Specify maximum log file size [B]"
-  , MAX_LOG_FILE_SIZE
   };
   const command_line::arg_descriptor<std::string> arg_log_level = {
     "log-level"
@@ -69,25 +64,6 @@ namespace daemon_args
   , "Max number of threads to use for a parallel job"
   , 0
   };
-
-  const command_line::arg_descriptor<std::string> arg_zmq_rpc_bind_ip   = {
-    "zmq-rpc-bind-ip"
-      , "IP for ZMQ RPC server to listen on"
-      , "127.0.0.1"
-  };
-
-  const command_line::arg_descriptor<std::string> arg_zmq_rpc_bind_port = {
-    "zmq-rpc-bind-port"
-      , "Port for ZMQ RPC server to listen on"
-      , std::to_string(config::ZMQ_RPC_DEFAULT_PORT)
-  };
-
-  const command_line::arg_descriptor<std::string> arg_zmq_testnet_rpc_bind_port = {
-    "zmq-testnet-rpc-bind-port"
-      , "Port for testnet ZMQ RPC server to listen on"
-      , std::to_string(config::testnet::ZMQ_RPC_DEFAULT_PORT)
-  };
-
 }  // namespace daemon_args
 
 #endif // DAEMON_COMMAND_LINE_ARGS_H

@@ -1,6 +1,6 @@
-// Copyright (c) 2014-2018, The Monero Project
-//
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
@@ -46,7 +46,6 @@
 #include "blockchain_db/blockchain_db.h"
 #include "crypto/hash.h"
 #include "rpc/core_rpc_server_commands_defs.h"
-#include "rpc/message_data_structs.h"
 
 namespace cryptonote
 {
@@ -137,11 +136,10 @@ namespace cryptonote
      * @param fee the transaction fee
      * @param relayed return-by-reference was transaction relayed to us by the network?
      * @param do_not_relay return-by-reference is transaction not to be relayed to the network?
-     * @param double_spend_seen return-by-reference was a double spend seen for that transaction?
      *
      * @return true unless the transaction cannot be found in the pool
      */
-    bool take_tx(const crypto::hash &id, transaction &tx, size_t& blob_size, uint64_t& fee, bool &relayed, bool &do_not_relay, bool &double_spend_seen);
+    bool take_tx(const crypto::hash &id, transaction &tx, size_t& blob_size, uint64_t& fee, bool &relayed, bool &do_not_relay);
 
     /**
      * @brief checks if the pool has a transaction with the given hash
@@ -228,43 +226,35 @@ namespace cryptonote
      *
      * @return true
      */
-    bool fill_block_template(block &bl, size_t median_size, uint64_t already_generated_coins, size_t &total_size, uint64_t &fee, uint64_t &expected_reward, uint8_t version);
+    bool fill_block_template(block &bl, size_t median_size, uint64_t already_generated_coins, size_t &total_size, uint64_t &fee, uint64_t &expected_reward, uint8_t version, uint64_t height);
 
     /**
      * @brief get a list of all transactions in the pool
      *
      * @param txs return-by-reference the list of transactions
-     * @param include_unrelayed_txes include unrelayed txes in the result
-     *
      */
-    void get_transactions(std::list<transaction>& txs, bool include_unrelayed_txes = true) const;
+    void get_transactions(std::list<transaction>& txs) const;
 
     /**
      * @brief get a list of all transaction hashes in the pool
      *
      * @param txs return-by-reference the list of transactions
-     * @param include_unrelayed_txes include unrelayed txes in the result
-     *
      */
-    void get_transaction_hashes(std::vector<crypto::hash>& txs, bool include_unrelayed_txes = true) const;
+    void get_transaction_hashes(std::vector<crypto::hash>& txs) const;
 
     /**
      * @brief get (size, fee, receive time) for all transaction in the pool
      *
      * @param txs return-by-reference that data
-     * @param include_unrelayed_txes include unrelayed txes in the result
-     *
      */
-    void get_transaction_backlog(std::vector<tx_backlog_entry>& backlog, bool include_unrelayed_txes = true) const;
+    void get_transaction_backlog(std::vector<tx_backlog_entry>& backlog) const;
 
     /**
      * @brief get a summary statistics of all transaction hashes in the pool
      *
      * @param stats return-by-reference the pool statistics
-     * @param include_unrelayed_txes include unrelayed txes in the result
-     *
      */
-    void get_transaction_stats(struct txpool_stats& stats, bool include_unrelayed_txes = true) const;
+    void get_transaction_stats(struct txpool_stats& stats) const;
 
     /**
      * @brief get information about all transactions and key images in the pool
@@ -273,33 +263,10 @@ namespace cryptonote
      *
      * @param tx_infos return-by-reference the transactions' information
      * @param key_image_infos return-by-reference the spent key images' information
-     * @param include_sensitive_data include unrelayed txes and fields that are sensitive to the node privacy
      *
      * @return true
      */
-    bool get_transactions_and_spent_keys_info(std::vector<tx_info>& tx_infos, std::vector<spent_key_image_info>& key_image_infos, bool include_sensitive_data = true) const;
-
-    /**
-     * @brief get information about all transactions and key images in the pool
-     *
-     * see documentation on tx_in_pool and key_images_with_tx_hashes for more details
-     *
-     * @param tx_infos [out] the transactions' information
-     * @param key_image_infos [out] the spent key images' information
-     *
-     * @return true
-     */
-    bool get_pool_for_rpc(std::vector<cryptonote::rpc::tx_in_pool>& tx_infos, cryptonote::rpc::key_images_with_tx_hashes& key_image_infos) const;
-
-    /**
-     * @brief check for presence of key images in the pool
-     *
-     * @param key_images [in] vector of key images to check
-     * @param spent [out] vector of bool to return
-     *
-     * @return true
-     */
-    bool check_for_key_images(const std::vector<crypto::key_image>& key_images, std::vector<bool> spent) const;
+    bool get_transactions_and_spent_keys_info(std::vector<tx_info>& tx_infos, std::vector<spent_key_image_info>& key_image_infos) const;
 
     /**
      * @brief get a specific transaction from the pool
@@ -318,7 +285,6 @@ namespace cryptonote
      *   nonzero fee
      *   hasn't been relayed too recently
      *   isn't old enough that relaying it is considered harmful
-     * Note a transaction can be "relayable" even if do_not_relay is true
      *
      * @param txs return-by-reference the transactions and their hashes
      *
@@ -338,7 +304,7 @@ namespace cryptonote
      *
      * @return the number of transactions in the pool
      */
-    size_t get_transactions_count(bool include_unrelayed_txes = true) const;
+    size_t get_transactions_count() const;
 
     /**
      * @brief get a string containing human-readable pool information
@@ -381,14 +347,14 @@ namespace cryptonote
       /*! if the transaction was returned to the pool from the blockchain
        *  due to a reorg, then this will be true
        */
-      bool kept_by_block;  
+      bool kept_by_block;
 
       //! the highest block the transaction referenced when last checking it failed
       /*! if verifying a transaction's inputs fails, it's possible this is due
        *  to a reorg since it was created (if it used recently created outputs
        *  as inputs).
        */
-      uint64_t last_failed_height;  
+      uint64_t last_failed_height;
 
       //! the hash of the highest block the transaction referenced when last checking it failed
       /*! if verifying a transaction's inputs fails, it's possible this is due
@@ -402,8 +368,6 @@ namespace cryptonote
       time_t last_relayed_time;  //!< the last time the transaction was relayed to the network
       bool relayed;  //!< whether or not the transaction has been relayed to the network
       bool do_not_relay; //!< to avoid relay this transaction to the network
-
-      bool double_spend_seen; //!< true iff another tx was seen double spending this one
     };
 
   private:
@@ -491,11 +455,6 @@ namespace cryptonote
      */
     bool is_transaction_ready_to_go(txpool_tx_meta_t& txd, transaction &tx) const;
 
-    /**
-     * @brief mark all transactions double spending the one passed
-     */
-    void mark_double_spend(const transaction &tx);
-
     //TODO: confirm the below comments and investigate whether or not this
     //      is the desired behavior
     //! map key images to transactions which spent them
@@ -516,7 +475,7 @@ private:
 #endif
 
     //! container for spent key images from the transactions in the pool
-    key_images_container m_spent_key_images;  
+    key_images_container m_spent_key_images;
 
     //TODO: this time should be a named constant somewhere, not hard-coded
     //! interval on which to check for stale/"stuck" transactions

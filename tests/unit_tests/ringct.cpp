@@ -1,21 +1,21 @@
-// Copyright (c) 2014-2018, The Monero Project
-// 
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Fonero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 // 
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright notice, this list of
 //    conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright notice, this list
 //    of conditions and the following disclaimer in the documentation and/or other
 //    materials provided with the distribution.
-// 
+//
 // 3. Neither the name of the copyright holder nor the names of its contributors may be
 //    used to endorse or promote products derived from this software without specific
 //    prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
@@ -25,7 +25,7 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
 
 #include "gtest/gtest.h"
@@ -38,7 +38,6 @@
 #include "ringct/rctSigs.h"
 #include "ringct/rctOps.h"
 
-using namespace std;
 using namespace crypto;
 using namespace rct;
 
@@ -111,7 +110,7 @@ TEST(ringct, MG_sigs)
             sk[j] = xm[ind][j];
         }
         key message = identity();
-        mgSig IIccss = MLSAG_Gen(message, P, sk, NULL, NULL, ind, R);
+        mgSig IIccss = MLSAG_Gen(message, P, sk, ind, R);
         ASSERT_TRUE(MLSAG_Ver(message, P, IIccss, R));
 
         //#MG sig: false one
@@ -132,7 +131,7 @@ TEST(ringct, MG_sigs)
             sk[j] = xx[ind][j];
         }
         sk[2] = skGen();//asume we don't know one of the private keys..
-        IIccss = MLSAG_Gen(message, P, sk, NULL, NULL, ind, R);
+        IIccss = MLSAG_Gen(message, P, sk, ind, R);
         ASSERT_FALSE(MLSAG_Ver(message, P, IIccss, R));
 }
 
@@ -151,7 +150,7 @@ TEST(ringct, range_proofs)
         tie(sctmp, pctmp) = ctskpkGen(7000);
         sc.push_back(sctmp);
         pc.push_back(pctmp);
-        vector<xmr_amount >amounts;
+        vector<fno_amount >amounts;
         rct::keyV amount_keys;
         key mask;
 
@@ -171,13 +170,13 @@ TEST(ringct, range_proofs)
         destinations.push_back(Pk);
 
         //compute rct data with mixin 500
-        rctSig s = genRct(rct::zero(), sc, pc, destinations, amounts, amount_keys, NULL, NULL, 3);
+        rctSig s = genRct(rct::zero(), sc, pc, destinations, amounts, amount_keys, 3);
 
         //verify rct data
         ASSERT_TRUE(verRct(s));
 
         //decode received amount
-        decodeRct(s, amount_keys[1], 1, mask);
+        ASSERT_TRUE(decodeRct(s, amount_keys[1], 1, mask));
 
         // Ring CT with failing MG sig part should not verify!
         // Since sum of inputs != outputs
@@ -188,13 +187,13 @@ TEST(ringct, range_proofs)
 
 
         //compute rct data with mixin 500
-        s = genRct(rct::zero(), sc, pc, destinations, amounts, amount_keys, NULL, NULL, 3);
+        s = genRct(rct::zero(), sc, pc, destinations, amounts, amount_keys, 3);
 
         //verify rct data
         ASSERT_FALSE(verRct(s));
 
         //decode received amount
-        decodeRct(s, amount_keys[1], 1, mask);
+        ASSERT_TRUE(decodeRct(s, amount_keys[1], 1, mask));
 }
 
 TEST(ringct, range_proofs_with_fee)
@@ -212,7 +211,7 @@ TEST(ringct, range_proofs_with_fee)
         tie(sctmp, pctmp) = ctskpkGen(7000);
         sc.push_back(sctmp);
         pc.push_back(pctmp);
-        vector<xmr_amount >amounts;
+        vector<fno_amount >amounts;
         keyV amount_keys;
         key mask;
 
@@ -235,13 +234,13 @@ TEST(ringct, range_proofs_with_fee)
         destinations.push_back(Pk);
 
         //compute rct data with mixin 500
-        rctSig s = genRct(rct::zero(), sc, pc, destinations, amounts, amount_keys, NULL, NULL, 3);
+        rctSig s = genRct(rct::zero(), sc, pc, destinations, amounts, amount_keys, 3);
 
         //verify rct data
         ASSERT_TRUE(verRct(s));
 
         //decode received amount
-        decodeRct(s, amount_keys[1], 1, mask);
+        ASSERT_TRUE(decodeRct(s, amount_keys[1], 1, mask));
 
         // Ring CT with failing MG sig part should not verify!
         // Since sum of inputs != outputs
@@ -252,13 +251,13 @@ TEST(ringct, range_proofs_with_fee)
 
 
         //compute rct data with mixin 500
-        s = genRct(rct::zero(), sc, pc, destinations, amounts, amount_keys, NULL, NULL, 3);
+        s = genRct(rct::zero(), sc, pc, destinations, amounts, amount_keys, 3);
 
         //verify rct data
         ASSERT_FALSE(verRct(s));
 
         //decode received amount
-        decodeRct(s, amount_keys[1], 1, mask);
+        ASSERT_TRUE(decodeRct(s, amount_keys[1], 1, mask));
 }
 
 TEST(ringct, simple)
@@ -266,9 +265,9 @@ TEST(ringct, simple)
         ctkeyV sc, pc;
         ctkey sctmp, pctmp;
         //this vector corresponds to output amounts
-        vector<xmr_amount>outamounts;
+        vector<fno_amount>outamounts;
        //this vector corresponds to input amounts
-        vector<xmr_amount>inamounts;
+        vector<fno_amount>inamounts;
         //this keyV corresponds to destination pubkeys
         keyV destinations;
         keyV amount_keys;
@@ -308,22 +307,22 @@ TEST(ringct, simple)
         key message = skGen(); //real message later (hash of txn..)
 
         //compute sig with mixin 2
-        xmr_amount txnfee = 1;
+        fno_amount txnfee = 1;
 
-        rctSig s = genRctSimple(message, sc, pc, destinations,inamounts, outamounts, amount_keys, NULL, NULL, txnfee, 2);
+        rctSig s = genRctSimple(message, sc, pc, destinations,inamounts, outamounts, amount_keys, txnfee, 2);
 
         //verify ring ct signature
         ASSERT_TRUE(verRctSimple(s));
 
         //decode received amount corresponding to output pubkey index 1
-        decodeRctSimple(s, amount_keys[1], 1, mask);
+        ASSERT_TRUE(decodeRctSimple(s, amount_keys[1], 1, mask));
 }
 
 static rct::rctSig make_sample_rct_sig(int n_inputs, const uint64_t input_amounts[], int n_outputs, const uint64_t output_amounts[], bool last_is_fee)
 {
     ctkeyV sc, pc;
     ctkey sctmp, pctmp;
-    vector<xmr_amount >amounts;
+    vector<fno_amount >amounts;
     keyV destinations;
     keyV amount_keys;
     key Sk, Pk;
@@ -344,14 +343,14 @@ static rct::rctSig make_sample_rct_sig(int n_inputs, const uint64_t input_amount
         }
     }
 
-    return genRct(rct::zero(), sc, pc, destinations, amounts, amount_keys, NULL, NULL, 3);;
+    return genRct(rct::zero(), sc, pc, destinations, amounts, amount_keys, 3);;
 }
 
 static rct::rctSig make_sample_simple_rct_sig(int n_inputs, const uint64_t input_amounts[], int n_outputs, const uint64_t output_amounts[], uint64_t fee)
 {
     ctkeyV sc, pc;
     ctkey sctmp, pctmp;
-    vector<xmr_amount> inamounts, outamounts;
+    vector<fno_amount> inamounts, outamounts;
     keyV destinations;
     keyV amount_keys;
     key Sk, Pk;
@@ -370,7 +369,7 @@ static rct::rctSig make_sample_simple_rct_sig(int n_inputs, const uint64_t input
         destinations.push_back(Pk);
     }
 
-    return genRctSimple(rct::zero(), sc, pc, destinations, inamounts, outamounts, amount_keys, NULL, NULL, fee, 3);;
+    return genRctSimple(rct::zero(), sc, pc, destinations, inamounts, outamounts, amount_keys, fee, 3);;
 }
 
 static bool range_proof_test(bool expected_valid,
@@ -821,7 +820,7 @@ TEST(ringct, HPow2)
   }
 }
 
-static const xmr_amount test_amounts[]={0, 1, 2, 3, 4, 5, 10000, 10000000000000000000ull, 10203040506070809000ull, 123456789123456789};
+static const fno_amount test_amounts[]={0, 1, 2, 3, 4, 5, 10000, 10000000000000000000ull, 10203040506070809000ull, 123456789123456789};
 
 TEST(ringct, ecdh_roundtrip)
 {

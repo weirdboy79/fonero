@@ -27,7 +27,6 @@
 #pragma once
 
 #include "misc_log_ex.h"
-#include "string_tools.h"
 #include <atomic>
 #include <condition_variable>
 #include <functional>
@@ -38,8 +37,6 @@
 #include <stdio.h>
 #endif
 #include <boost/thread.hpp>
-#include <boost/algorithm/string/classification.hpp>
-#include <boost/algorithm/string/split.hpp>
 
 #ifdef HAVE_READLINE
   #include "readline_buffer.h"
@@ -459,35 +456,29 @@ eof:
   class command_handler {
   public:
     typedef boost::function<bool (const std::vector<std::string> &)> callback;
-    typedef std::map<std::string, std::pair<callback, std::pair<std::string, std::string>>> lookup;
+    typedef std::map<std::string, std::pair<callback, std::string> > lookup;
 
     std::string get_usage()
     {
       std::stringstream ss;
+      size_t max_command_len = 0;
+      for(auto& x:m_command_handlers)
+        if(x.first.size() > max_command_len)
+          max_command_len = x.first.size();
 
       for(auto& x:m_command_handlers)
       {
-        ss << x.second.second.first << ENDL;
+        ss.width(max_command_len + 3);
+        ss << std::left <<  x.first << x.second.second << ENDL;
       }
       return ss.str();
     }
 
-    std::pair<std::string, std::string> get_documentation(const std::vector<std::string>& cmd)
-    {
-      if(cmd.empty())
-        return std::make_pair("", "");
-      auto it = m_command_handlers.find(cmd.front());
-      if(it == m_command_handlers.end())
-        return std::make_pair("", "");
-      return it->second.second;
-    }
-
-    void set_handler(const std::string& cmd, const callback& hndlr, const std::string& usage = "", const std::string& description = "")
+    void set_handler(const std::string& cmd, const callback& hndlr, const std::string& usage = "")
     {
       lookup::mapped_type & vt = m_command_handlers[cmd];
       vt.first = hndlr;
-      vt.second.first = description.empty() ? cmd : usage;
-      vt.second.second = description.empty() ? usage : description;
+      vt.second = usage;
 #ifdef HAVE_READLINE
       rdln::readline_buffer::add_completion(cmd);
 #endif

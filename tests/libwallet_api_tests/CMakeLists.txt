@@ -1,6 +1,6 @@
-# Copyright (c) 2014-2018, The Monero Project
-#
-# All rights reserved.
+# Copyright (c) 2017-2018, The Fonero Project.
+# Copyright (c) 2014-2017 The Monero Project.
+# Portions Copyright (c) 2012-2013 The Cryptonote developers.
 #
 # Redistribution and use in source and binary forms, with or without modification, are
 # permitted provided that the following conditions are met:
@@ -39,9 +39,7 @@ add_executable(libwallet_api_tests
 
 target_link_libraries(libwallet_api_tests
   PRIVATE
-    wallet_api
     wallet
-    version
     epee
     ${Boost_CHRONO_LIBRARY}
     ${Boost_SERIALIZATION_LIBRARY}

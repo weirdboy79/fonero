@@ -1,6 +1,6 @@
-# Copyright (c) 2014-2018, The Monero Project
-#
-# All rights reserved.
+# Copyright (c) 2017-2018, The Fonero Project.
+# Copyright (c) 2014-2017 The Monero Project.
+# Portions Copyright (c) 2012-2013 The Cryptonote developers.
 #
 # Redistribution and use in source and binary forms, with or without modification, are
 # permitted provided that the following conditions are met:
@@ -53,9 +53,9 @@ if (BERKELEY_DB)
   )
 endif()
 
-monero_private_headers(blockchain_db
+fonero_private_headers(blockchain_db
   ${crypto_private_headers})
-monero_add_library(blockchain_db
+fonero_add_library(blockchain_db
   ${blockchain_db_sources}
   ${blockchain_db_headers}
   ${blockchain_db_private_headers})

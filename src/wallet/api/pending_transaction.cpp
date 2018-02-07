@@ -1,6 +1,6 @@
-// Copyright (c) 2014-2018, The Monero Project
-//
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
@@ -42,7 +42,7 @@
 
 using namespace std;
 
-namespace Monero {
+namespace Fonero {
 
 PendingTransaction::~PendingTransaction() {}
 
@@ -149,15 +149,6 @@ uint64_t PendingTransactionImpl::amount() const
     return result;
 }
 
-uint64_t PendingTransactionImpl::dust() const
-{
-    uint64_t result = 0;
-    for (const auto & ptx : m_pending_tx) {
-        result += ptx.dust;
-    }
-    return result;
-}
-
 uint64_t PendingTransactionImpl::fee() const
 {
     uint64_t result = 0;
@@ -172,23 +163,5 @@ uint64_t PendingTransactionImpl::txCount() const
     return m_pending_tx.size();
 }
 
-std::vector<uint32_t> PendingTransactionImpl::subaddrAccount() const
-{
-    std::vector<uint32_t> result;
-    for (const auto& ptx : m_pending_tx)
-        result.push_back(ptx.construction_data.subaddr_account);
-    return result;
 }
-
-std::vector<std::set<uint32_t>> PendingTransactionImpl::subaddrIndices() const
-{
-    std::vector<std::set<uint32_t>> result;
-    for (const auto& ptx : m_pending_tx)
-        result.push_back(ptx.construction_data.subaddr_indices);
-    return result;
-}
-
-}
-
-namespace Bitmonero = Monero;
 

@@ -1,0 +1,17 @@
+[Unit]
+Description=Fonero Full Node
+After=network.target
+
+[Service]
+User=fonero
+Group=fonero
+WorkingDirectory=~
+
+Type=forking
+PIDFile=/var/run/fonero-daemon.pid
+
+ExecStart=/usr/bin/fonero-daemon --config-file /etc/fonero-daemon.conf \
+    --detach --pidfile /var/run/fonero-daemon.pid
+
+[Install]
+WantedBy=multi-user.target

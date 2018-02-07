@@ -1,6 +1,4 @@
 include README
-include VERSION
-include LICENSE
 include miniupnpcmodule.c
 include setup.py
 include *.h

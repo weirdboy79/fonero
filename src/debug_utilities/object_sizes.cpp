@@ -1,6 +1,6 @@
-// Copyright (c) 2017-2018, The Monero Project
-//
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@
 #include "cryptonote_basic/tx_extra.h"
 #include "cryptonote_core/blockchain.h"
 #include "p2p/p2p_protocol_defs.h"
-#include "net/connection_basic.hpp"
+#include "p2p/connection_basic.hpp"
 #include "p2p/net_peerlist.h"
 #include "p2p/net_node.h"
 #include "cryptonote_protocol/cryptonote_protocol_handler.h"
@@ -43,15 +43,15 @@
 #include "wallet/api/unsigned_transaction.h"
 #include "wallet/api/pending_transaction.h"
 
-#undef MONERO_DEFAULT_LOG_CATEGORY
-#define MONERO_DEFAULT_LOG_CATEGORY "debugtools.objectsizes"
+#undef FONERO_DEFAULT_LOG_CATEGORY
+#define FONERO_DEFAULT_LOG_CATEGORY "debugtools.objectsizes"
 
 class size_logger
 {
 public:
   ~size_logger()
   {
-    for (const auto &i: types)
+    for (const auto i: types)
       std::cout << std::to_string(i.first) << "\t" << i.second << std::endl;
   }
   void add(const char *type, size_t size) { types.insert(std::make_pair(size, type)); }
@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 {
   size_logger sl;
 
-  tools::on_startup();
+  tools::sanitize_locale();
 
   mlog_configure("", true);
 
@@ -84,6 +84,7 @@ int main(int argc, char* argv[])
 
   SL(cryptonote::txpool_tx_meta_t);
 
+  SL(epee::net_utils::network_address_base);
   SL(epee::net_utils::ipv4_network_address);
   SL(epee::net_utils::network_address);
   SL(epee::net_utils::connection_context_base);
@@ -104,12 +105,12 @@ int main(int argc, char* argv[])
   SL(tools::wallet2::unsigned_tx_set);
   SL(tools::wallet2::signed_tx_set);
 
-  SL(Monero::WalletImpl);
-  SL(Monero::AddressBookRow);
-  SL(Monero::TransactionInfoImpl);
-  SL(Monero::TransactionHistoryImpl);
-  SL(Monero::PendingTransactionImpl);
-  SL(Monero::UnsignedTransactionImpl);
+  SL(Fonero::WalletImpl);
+  SL(Fonero::AddressBookRow);
+  SL(Fonero::TransactionInfoImpl);
+  SL(Fonero::TransactionHistoryImpl);
+  SL(Fonero::PendingTransactionImpl);
+  SL(Fonero::UnsignedTransactionImpl);
 
   return 0;
 }

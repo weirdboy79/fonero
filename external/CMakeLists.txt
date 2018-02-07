@@ -1,7 +1,7 @@
-# Copyright (c) 2014-2018, The Monero Project
-# 
-# All rights reserved.
-# 
+# Copyright (c) 2017-2018, The Fonero Project.
+# Copyright (c) 2014-2017 The Monero Project.
+# Portions Copyright (c) 2012-2013 The Cryptonote developers.
+#
 # Redistribution and use in source and binary forms, with or without modification, are
 # permitted provided that the following conditions are met:
 # 
@@ -87,15 +87,15 @@ if(NOT UNBOUND_INCLUDE_DIR OR STATIC)
   set(UNBOUND_LIBRARY_DIRS "${LIBEVENT2_LIBDIR}" PARENT_SCOPE)
 else()
   message(STATUS "Found libunbound include (unbound.h) in ${UNBOUND_INCLUDE_DIR}")
-  if(UNBOUND_LIBRARIES)
+#  if(UNBOUND_LIBRARIES)
     message(STATUS "Found libunbound shared library")
     set(UNBOUND_STATIC false PARENT_SCOPE)
     set(UNBOUND_INCLUDE ${UNBOUND_INCLUDE_DIR} PARENT_SCOPE)
     set(UNBOUND_LIBRARY ${UNBOUND_LIBRARIES} PARENT_SCOPE)
     set(UNBOUND_LIBRARY_DIRS "" PARENT_SCOPE)
-  else()
-    die("Found libunbound includes, but could not find libunbound library. Please make sure you have installed libunbound or libunbound-dev or the equivalent")
-  endif()
+#  else()
+#    die("Found libunbound includes, but could not find libunbound library. Please make sure you have installed libunbound or libunbound-dev or the equivalent")
+#  endif()
 endif()
 
 add_subdirectory(db_drivers)

@@ -1,6 +1,6 @@
-# Copyright (c) 2016-2018, The Monero Project
-#
-# All rights reserved.
+# Copyright (c) 2017-2018, The Fonero Project.
+# Copyright (c) 2014-2017 The Monero Project.
+# Portions Copyright (c) 2012-2013 The Cryptonote developers.
 #
 # Redistribution and use in source and binary forms, with or without modification, are
 # permitted provided that the following conditions are met:
@@ -30,20 +30,18 @@ set(ringct_sources
   rctOps.cpp
   rctSigs.cpp
   rctTypes.cpp
-  rctCryptoOps.c
-  bulletproofs.cc)
+  rctCryptoOps.c)
 
 set(ringct_headers)
 
 set(ringct_private_headers
   rctOps.h
   rctSigs.h
-  rctTypes.h
-  bulletproofs.h)
+  rctTypes.h)
 
-monero_private_headers(ringct
+fonero_private_headers(ringct
   ${crypto_private_headers})
-monero_add_library(ringct
+fonero_add_library(ringct
   ${ringct_sources}
   ${ringct_headers}
   ${ringct_private_headers})
@@ -53,5 +51,4 @@ target_link_libraries(ringct
     cncrypto
     cryptonote_basic
   PRIVATE
-    ${OPENSSL_LIBRARIES}
     ${EXTRA_LIBRARIES})

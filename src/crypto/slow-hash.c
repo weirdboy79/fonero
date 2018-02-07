@@ -1,6 +1,6 @@
-// Copyright (c) 2014-2018, The Monero Project
-//
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
@@ -47,7 +47,7 @@
 extern int aesb_single_round(const uint8_t *in, uint8_t*out, const uint8_t *expandedKey);
 extern int aesb_pseudo_round(const uint8_t *in, uint8_t *out, const uint8_t *expandedKey);
 
-#if !defined NO_AES && (defined(__x86_64__) || (defined(_MSC_VER) && defined(_WIN64)))
+#if defined(__x86_64__) || (defined(_MSC_VER) && defined(_WIN64))
 // Optimised code below, uses x86-specific intrinsics, SSE2, AES-NI
 // Fall back to more portable code is down at the bottom
 
@@ -195,7 +195,7 @@ STATIC INLINE int force_software_aes(void)
   if (use != -1)
     return use;
 
-  const char *env = getenv("MONERO_USE_SOFTWARE_AES");
+  const char *env = getenv("FONERO_USE_SOFTWARE_AES");
   if (!env) {
     use = 0;
   }
@@ -255,7 +255,7 @@ STATIC INLINE void aes_256_assist2(__m128i* t1, __m128i * t3)
  * of the AES encryption used to fill (and later, extract randomness from)
  * the large 2MB buffer.  Note that CryptoNight does not use a completely
  * standard AES encryption for its buffer expansion, so do not copy this
- * function outside of Monero without caution!  This version uses the hardware
+ * function outside of Fonero without caution!  This version uses the hardware
  * AESKEYGENASSIST instruction to speed key generation, and thus requires
  * CPU AES support.
  * For more information about these functions, see page 19 of Intel's AES instructions
@@ -486,7 +486,7 @@ void slow_hash_free_state(void)
 }
 
 /**
- * @brief the hash function implementing CryptoNight, used for the Monero proof-of-work
+ * @brief the hash function implementing CryptoNight, used for the Fonero proof-of-work
  *
  * Computes the hash of <data> (which consists of <length> bytes), returning the
  * hash in <hash>.  The CryptoNight hash operates by first using Keccak 1600,
@@ -645,7 +645,7 @@ void cn_slow_hash(const void *data, size_t length, char *hash)
     extra_hashes[state.hs.b[0] & 3](&state, 200, hash);
 }
 
-#elif !defined NO_AES && (defined(__arm__) || defined(__aarch64__))
+#elif defined(__arm__) || defined(__aarch64__)
 void slow_hash_allocate_state(void)
 {
   // Do nothing, this is just to maintain compatibility with the upgraded slow-hash.c

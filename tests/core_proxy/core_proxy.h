@@ -1,21 +1,21 @@
-// Copyright (c) 2014-2018, The Monero Project
-// 
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Fonero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 // 
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright notice, this list of
 //    conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright notice, this list
 //    of conditions and the following disclaimer in the documentation and/or other
 //    materials provided with the distribution.
-// 
+//
 // 3. Neither the name of the copyright holder nor the names of its contributors may be
 //    used to endorse or promote products derived from this software without specific
 //    prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
@@ -25,7 +25,7 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
 
 #pragma once
@@ -46,7 +46,7 @@ namespace tests
       cryptonote::blobdata blob;
       std::list<cryptonote::transaction> txes;
 
-      block_index() : height(0), id(crypto::null_hash), longhash(crypto::null_hash) { }
+      block_index() : height(0), id(cryptonote::null_hash), longhash(cryptonote::null_hash) { }
       block_index(size_t _height, const crypto::hash &_id, const crypto::hash &_longhash, const cryptonote::block &_blk, const cryptonote::blobdata &_blob, const std::list<cryptonote::transaction> &_txes)
           : height(_height), id(_id), longhash(_longhash), blk(_blk), blob(_blob), txes(_txes) { }
   };
@@ -62,7 +62,7 @@ namespace tests
 
       bool add_block(const crypto::hash &_id, const crypto::hash &_longhash, const cryptonote::block &_blk, const cryptonote::blobdata &_blob);
       void build_short_history(std::list<crypto::hash> &m_history, const crypto::hash &m_start);
-      
+
 
   public:
     void on_synchronized(){}
@@ -74,7 +74,7 @@ namespace tests
     bool get_short_chain_history(std::list<crypto::hash>& ids);
     bool get_stat_info(cryptonote::core_stat_info& st_inf){return true;}
     bool have_block(const crypto::hash& id);
-    void get_blockchain_top(uint64_t& height, crypto::hash& top_id);
+    bool get_blockchain_top(uint64_t& height, crypto::hash& top_id);
     bool handle_incoming_tx(const cryptonote::blobdata& tx_blob, cryptonote::tx_verification_context& tvc, bool keeped_by_block, bool relayed, bool do_not_relay);
     bool handle_incoming_txs(const std::list<cryptonote::blobdata>& tx_blobs, std::vector<cryptonote::tx_verification_context>& tvc, bool keeped_by_block, bool relayed, bool do_not_relay);
     bool handle_incoming_block(const cryptonote::blobdata& block_blob, cryptonote::block_verification_context& bvc, bool update_miner_blocktemplate = true);
@@ -100,7 +100,5 @@ namespace tests
     uint8_t get_ideal_hard_fork_version(uint64_t height) const { return 0; }
     uint8_t get_hard_fork_version(uint64_t height) const { return 0; }
     cryptonote::difficulty_type get_block_cumulative_difficulty(uint64_t height) const { return 0; }
-    bool fluffy_blocks_enabled() const { return false; }
-    uint64_t prevalidate_block_hashes(uint64_t height, const std::list<crypto::hash> &hashes) { return 0; }
   };
 }

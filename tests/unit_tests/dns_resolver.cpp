@@ -1,21 +1,21 @@
-// Copyright (c) 2014-2018, The Monero Project
-// 
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Fonero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 // 
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright notice, this list of
 //    conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright notice, this list
 //    of conditions and the following disclaimer in the documentation and/or other
 //    materials provided with the distribution.
-// 
+//
 // 3. Neither the name of the copyright holder nor the names of its contributors may be
 //    used to endorse or promote products derived from this software without specific
 //    prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
@@ -140,34 +140,20 @@ TEST(DNSResolver, GetTXTRecord)
 {
   bool avail, valid;
 
-  std::vector<std::string> records = tools::DNSResolver::instance().get_txt_record("donate.getmonero.org", avail, valid);
+  std::vector<std::string> records = tools::DNSResolver::instance().get_txt_record("donate.fonero.org", avail, valid);
 
   EXPECT_NE(0, records.size());
 
   for (auto& rec : records)
   {
-    std::cout << "TXT record for donate.getmonero.org: " << rec << std::endl;
+    std::cout << "TXT record for donate.fonero.org: " << rec << std::endl;
   }
 
   // replace first @ with .
-  std::string addr = tools::DNSResolver::instance().get_dns_format_from_oa_address("donate@getmonero.org");
-  EXPECT_STREQ("donate.getmonero.org", addr.c_str());
+  std::string addr = tools::DNSResolver::instance().get_dns_format_from_oa_address("donate@fonero.org");
+  EXPECT_STREQ("donate.fonero.org", addr.c_str());
 
   // no change
-  addr = tools::DNSResolver::instance().get_dns_format_from_oa_address("donate.getmonero.org");
-  EXPECT_STREQ("donate.getmonero.org", addr.c_str());
+  addr = tools::DNSResolver::instance().get_dns_format_from_oa_address("donate.fonero.org");
+  EXPECT_STREQ("donate.fonero.org", addr.c_str());
 }
-
-TEST(DNS_PUBLIC, empty) { EXPECT_STREQ("", tools::dns_utils::parse_dns_public("").c_str()); }
-TEST(DNS_PUBLIC, default) { EXPECT_STREQ("8.8.4.4", tools::dns_utils::parse_dns_public("tcp").c_str()); }
-TEST(DNS_PUBLIC, invalid_scheme) { EXPECT_STREQ("", tools::dns_utils::parse_dns_public("invalid").c_str()); }
-TEST(DNS_PUBLIC, invalid_ip_alpha) { EXPECT_STREQ("", tools::dns_utils::parse_dns_public("tcp://invalid").c_str()); }
-TEST(DNS_PUBLIC, invalid_ip_num1) { EXPECT_STREQ("", tools::dns_utils::parse_dns_public("tcp://3").c_str()); }
-TEST(DNS_PUBLIC, invalid_ip_num3) { EXPECT_STREQ("", tools::dns_utils::parse_dns_public("tcp://3.4.5").c_str()); }
-TEST(DNS_PUBLIC, invalid_ip_num4_extra) { EXPECT_STREQ("", tools::dns_utils::parse_dns_public("tcp://3.4.5.6x").c_str()); }
-TEST(DNS_PUBLIC, invalid_ip_num4_range) { EXPECT_STREQ("", tools::dns_utils::parse_dns_public("tcp://3.4.542.6").c_str()); }
-TEST(DNS_PUBLIC, invalid_ip_dot) { EXPECT_STREQ("", tools::dns_utils::parse_dns_public("tcp://3.4.5.6.").c_str()); }
-TEST(DNS_PUBLIC, invalid_ip_num5) { EXPECT_STREQ("", tools::dns_utils::parse_dns_public("tcp://3.4.5.6.7").c_str()); }
-TEST(DNS_PUBLIC, invalid_ip_4_missing) { EXPECT_STREQ("", tools::dns_utils::parse_dns_public("tcp://3.4..7").c_str()); }
-TEST(DNS_PUBLIC, valid_ip_lo) { EXPECT_STREQ("127.0.0.1", tools::dns_utils::parse_dns_public("tcp://127.0.0.1").c_str()); }
-TEST(DNS_PUBLIC, valid_ip) { EXPECT_STREQ("3.4.5.6", tools::dns_utils::parse_dns_public("tcp://3.4.5.6").c_str()); }

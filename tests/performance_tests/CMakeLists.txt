@@ -1,6 +1,6 @@
-# Copyright (c) 2014-2018, The Monero Project
-#
-# All rights reserved.
+# Copyright (c) 2017-2018, The Fonero Project.
+# Copyright (c) 2014-2017 The Monero Project.
+# Portions Copyright (c) 2012-2013 The Cryptonote developers.
 #
 # Redistribution and use in source and binary forms, with or without modification, are
 # permitted provided that the following conditions are met:
@@ -41,7 +41,6 @@ set(performance_tests_headers
   generate_key_image_helper.h
   generate_keypair.h
   is_out_to_acc.h
-  subaddress_expand.h
   multi_tx_test_base.h
   performance_tests.h
   performance_utils.h
@@ -52,7 +51,6 @@ add_executable(performance_tests
   ${performance_tests_headers})
 target_link_libraries(performance_tests
   PRIVATE
-    wallet
     cryptonote_core
     common
     cncrypto

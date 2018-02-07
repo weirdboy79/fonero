@@ -1,6 +1,6 @@
-// Copyright (c) 2014-2018, The Monero Project
-//
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
@@ -66,6 +66,7 @@
 #include <tuple>
 #include <type_traits>
 
+#include "crypto/crypto.h"
 #include "hex.h"
 #include "md5_l.h"
 #include "string_coding.h"
@@ -93,7 +94,7 @@ namespace
 
   constexpr const auto client_auth_field = ceref(u8"Authorization");
   constexpr const auto server_auth_field = ceref(u8"WWW-authenticate");
-  constexpr const auto auth_realm = ceref(u8"monero-rpc");
+  constexpr const auto auth_realm = ceref(u8"fonero-rpc");
   constexpr const char comma = 44;
   constexpr const char equal_sign = 61;
   constexpr const char quote = 34;
@@ -124,21 +125,13 @@ namespace
       {
         (*this)(boost::string_ref(arg));
       }
-      void operator()(const epee::wipeable_string& arg) const
-      {
-        md5::MD5Update(
-          std::addressof(ctx),
-          reinterpret_cast<const std::uint8_t*>(arg.data()),
-          arg.size()
-        );
-      }
 
       md5::MD5_CTX& ctx;
     };
 
     template<typename... T>
     std::array<char, 32> operator()(const T&... args) const
-    {      
+    {
       md5::MD5_CTX ctx{};
       md5::MD5Init(std::addressof(ctx));
       boost::fusion::for_each(std::tie(args...), update{ctx});
@@ -471,9 +464,9 @@ namespace
         }
 
         boost::optional<auth_message> operator()(const boost::string_ref request) const
-        { 
+        {
           namespace qi = boost::spirit::qi;
-           
+
           iterator current = request.begin();
           const iterator end = request.end();
 
@@ -656,7 +649,7 @@ namespace
     boost::iterator_range<iterator> response;
     boost::iterator_range<iterator> stale;
     boost::iterator_range<iterator> uri;
-    boost::iterator_range<iterator> username; 
+    boost::iterator_range<iterator> username;
   }; // auth_message
 
   struct add_challenge
@@ -677,7 +670,7 @@ namespace
         add_field(out, u8"realm", quoted(auth_realm));
         add_field(out, u8"nonce", quoted(nonce));
         add_field(out, u8"stale", is_stale ? ceref("true") : ceref("false"));
-        
+
         fields.push_back(std::make_pair(std::string(server_auth_field), std::move(out)));
       }
     }
@@ -693,13 +686,13 @@ namespace
     rc.m_response_code = 401;
     rc.m_response_comment = u8"Unauthorized";
     rc.m_mime_tipe = u8"text/html";
-    rc.m_body = 
+    rc.m_body =
       u8"<html><head><title>Unauthorized Access</title></head><body><h1>401 Unauthorized</h1></body></html>";
 
     boost::fusion::for_each(
       digest_algorithms, add_challenge{nonce, rc.m_additional_fields, is_stale}
     );
-    
+
     return rc;
   }
 }
@@ -710,8 +703,8 @@ namespace epee
   {
     namespace http
     {
-      http_server_auth::http_server_auth(login credentials, std::function<void(size_t, uint8_t*)> r)
-        : user(session{std::move(credentials)}), rng(std::move(r)) {
+      http_server_auth::http_server_auth(login credentials)
+        : user(session{std::move(credentials)}) {
       }
 
       boost::optional<http_response_info> http_server_auth::do_get_response(const http_request_info& request)
@@ -745,7 +738,7 @@ namespace epee
         user->counter = 0;
         {
           std::array<std::uint8_t, 16> rand_128bit{{}};
-          rng(rand_128bit.size(), rand_128bit.data());
+          crypto::rand(rand_128bit.size(), rand_128bit.data());
           user->nonce = string_encoding::base64_encode(rand_128bit.data(), rand_128bit.size());
         }
         return create_digest_response(user->nonce, is_stale);

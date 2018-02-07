@@ -1,23 +1,21 @@
-// Copyright (c) 2016, Monero Research Labs
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 //
-// Author: Shen Noether <shen.noether@gmx.com>
-// 
-// All rights reserved.
-// 
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright notice, this list of
 //    conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright notice, this list
 //    of conditions and the following disclaimer in the documentation and/or other
 //    materials provided with the distribution.
-// 
+//
 // 3. Neither the name of the copyright holder nor the names of its contributors may be
 //    used to endorse or promote products derived from this software without specific
 //    prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
@@ -32,15 +30,15 @@
 using namespace crypto;
 using namespace std;
 
-#undef MONERO_DEFAULT_LOG_CATEGORY
-#define MONERO_DEFAULT_LOG_CATEGORY "ringct"
+#undef FONERO_DEFAULT_LOG_CATEGORY
+#define FONERO_DEFAULT_LOG_CATEGORY "ringct"
 
 namespace rct {
 
-    //dp 
+    //dp
     //Debug printing for the above types
-    //Actually use DP(value) and #define DBG    
-    
+    //Actually use DP(value) and #define DBG
+
     void dp(key a) {
         int j = 0;
         printf("\"");
@@ -89,7 +87,7 @@ namespace rct {
         printf("]");
         printf("\n");
     }
-    void dp(xmr_amount vali) {
+    void dp(fno_amount vali) {
         printf("x: ");
         std::cout << vali;
         printf("\n\n");
@@ -111,36 +109,36 @@ namespace rct {
         printf("%s\n", st);
     }
 
-    //Various Conversions 
-    
+    //Various Conversions
+
     //uint long long to 32 byte key
-    void d2h(key & amounth, const xmr_amount in) {
+    void d2h(key & amounth, const fno_amount in) {
         sc_0(amounth.bytes);
-        xmr_amount val = in;
+        fno_amount val = in;
         int i = 0;
         while (val != 0) {
             amounth[i] = (unsigned char)(val & 0xFF);
             i++;
-            val /= (xmr_amount)256;
+            val /= (fno_amount)256;
         }
     }
-    
+
     //uint long long to 32 byte key
-    key d2h(const xmr_amount in) {
+    key d2h(const fno_amount in) {
         key amounth;
         sc_0(amounth.bytes);
-        xmr_amount val = in;
+        fno_amount val = in;
         int i = 0;
         while (val != 0) {
             amounth[i] = (unsigned char)(val & 0xFF);
             i++;
-            val /= (xmr_amount)256;
+            val /= (fno_amount)256;
         }
         return amounth;
     }
 
     //uint long long to int[64]
-    void d2b(bits  amountb, xmr_amount val) {
+    void d2b(bits  amountb, fno_amount val) {
         int i = 0;
         while (val != 0) {
             amountb[i] = val & 1;
@@ -152,19 +150,19 @@ namespace rct {
             i++;
         }
     }
-    
+
     //32 byte key to uint long long
     // if the key holds a value > 2^64
-    // then the value in the first 8 bytes is returned    
-    xmr_amount h2d(const key & test) {
-        xmr_amount vali = 0;
+    // then the value in the first 8 bytes is returned
+    fno_amount h2d(const key & test) {
+        fno_amount vali = 0;
         int j = 0;
         for (j = 7; j >= 0; j--) {
-            vali = (xmr_amount)(vali * 256 + (unsigned char)test.bytes[j]);
+            vali = (fno_amount)(vali * 256 + (unsigned char)test.bytes[j]);
         }
         return vali;
     }
-    
+
     //32 byte key to int[64]
     void h2b(bits amountb2, const key & test) {
         int val = 0, i = 0, j = 0;
@@ -181,7 +179,7 @@ namespace rct {
             }
         }
     }
-    
+
     //int[64] to 32 byte key
     void b2h(key & amountdh, const bits amountb2) {
         int byte, i, j;
@@ -197,13 +195,13 @@ namespace rct {
             amountdh[j] = (unsigned char)(0x00);
         }
     }
-    
+
     //int[64] to uint long long
-    xmr_amount b2d(bits amountb) {
-        xmr_amount vali = 0;
+    fno_amount b2d(bits amountb) {
+        fno_amount vali = 0;
         int j = 0;
         for (j = 63; j >= 0; j--) {
-            vali = (xmr_amount)(vali * 2 + amountb[j]);
+            vali = (fno_amount)(vali * 2 + amountb[j]);
         }
         return vali;
     }

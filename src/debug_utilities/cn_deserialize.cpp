@@ -1,6 +1,6 @@
-// Copyright (c) 2014-2018, The Monero Project
-//
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
@@ -26,15 +26,14 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include <boost/filesystem.hpp>
 #include "cryptonote_basic/cryptonote_basic.h"
 #include "cryptonote_basic/tx_extra.h"
 #include "cryptonote_core/blockchain.h"
 #include "common/command_line.h"
 #include "version.h"
 
-#undef MONERO_DEFAULT_LOG_CATEGORY
-#define MONERO_DEFAULT_LOG_CATEGORY "debugtools.deserialize"
+#undef FONERO_DEFAULT_LOG_CATEGORY
+#define FONERO_DEFAULT_LOG_CATEGORY "debugtools.deserialize"
 
 namespace po = boost::program_options;
 using namespace epee;
@@ -46,7 +45,7 @@ int main(int argc, char* argv[])
   uint32_t log_level = 0;
   std::string input;
 
-  tools::on_startup();
+  tools::sanitize_locale();
 
   boost::filesystem::path output_file_path;
 
@@ -77,7 +76,7 @@ int main(int argc, char* argv[])
 
   if (command_line::get_arg(vm, command_line::arg_help))
   {
-    std::cout << "Monero '" << MONERO_RELEASE_NAME << "' (v" << MONERO_VERSION_FULL << ")" << ENDL << ENDL;
+    std::cout << "Fonero '" << FONERO_RELEASE_NAME << "' (v" << FONERO_VERSION_FULL << ")" << ENDL << ENDL;
     std::cout << desc_options << std::endl;
     return 1;
   }
@@ -154,11 +153,7 @@ int main(int argc, char* argv[])
     std::cout << "Parsed transaction:" << std::endl;
     std::cout << cryptonote::obj_to_json_str(tx) << std::endl;
 
-    bool parsed = cryptonote::parse_tx_extra(tx.extra, fields);
-    if (!parsed)
-      std::cout << "Failed to parse tx_extra" << std::endl;
-
-    if (!fields.empty())
+    if (cryptonote::parse_tx_extra(tx.extra, fields))
     {
       std::cout << "tx_extra has " << fields.size() << " field(s)" << std::endl;
       for (size_t n = 0; n < fields.size(); ++n)
@@ -175,7 +170,7 @@ int main(int argc, char* argv[])
     }
     else
     {
-      std::cout << "No fields were found in tx_extra" << std::endl;
+      std::cout << "Failed to parse tx_extra" << std::endl;
     }
   }
   else

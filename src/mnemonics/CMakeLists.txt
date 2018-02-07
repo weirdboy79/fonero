@@ -1,6 +1,6 @@
-# Copyright (c) 2014-2018, The Monero Project
-#
-# All rights reserved.
+# Copyright (c) 2017-2018, The Fonero Project.
+# Copyright (c) 2014-2017 The Monero Project.
+# Portions Copyright (c) 2012-2013 The Cryptonote developers.
 #
 # Redistribution and use in source and binary forms, with or without modification, are
 # permitted provided that the following conditions are met:
@@ -46,18 +46,16 @@ set(mnemonics_private_headers
   russian.h
   singleton.h
   spanish.h
-  esperanto.h
-  lojban.h)
+  esperanto.h)
 
-monero_private_headers(mnemonics
+fonero_private_headers(mnemonics
   ${mnemonics_private_headers})
-monero_add_library(mnemonics
+fonero_add_library(mnemonics
   ${mnemonics_sources}
   ${mnemonics_headers}
   ${mnemonics_private_headers})
 target_link_libraries(mnemonics
   PUBLIC
-    epee
     easylogging
     ${Boost_SYSTEM_LIBRARY}
   PRIVATE

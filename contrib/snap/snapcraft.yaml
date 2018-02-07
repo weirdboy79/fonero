@@ -1,31 +1,31 @@
-name: monero
-version: 0.11.1.0-1
-summary: "Monero: the secure, private, untraceable cryptocurrency https://getmonero.org"
+name: fonero
+version: 0.1.0.1
+summary: "Fonero - the secure, private, untraceable cryptocurrency."
 description: |
-    Monero is a private, secure, untraceable, decentralised digital currency.
+    Fonero is a private, secure, untraceable, decentralised digital currency.
     You are your bank, you control your funds, and nobody can trace your transfers
     unless you allow them to do so.
 grade: devel
 confinement: strict
 
 apps:
-    monerod:
+    fonero-daemon:
         daemon: forking
         command: |
-          monerod-wrapper --detach --data-dir ${SNAP_COMMON} --config-file ${SNAP_USER_DATA}/etc/monerod.conf
+          fonero-daemon-wrapper --detach --data-dir ${SNAP_COMMON} --config-file ${SNAP_USER_DATA}/etc/fonero-daemon.conf
         plugs:
             - network
             - network-bind
-    monero-wallet-rpc:
+    fonero-wallet-rpc:
         command: |
-          monero-wallet-rpc --log-file ${SNAP_USER_DATA}
+          fonero-wallet-rpc --log-file ${SNAP_USER_DATA}
         plugs:
             - home
             - network
             - network-bind
-    monero-wallet-cli:
+    fonero-wallet-cli:
         command: |
-          monero-wallet-cli --log-file ${SNAP_USER_DATA}
+          fonero-wallet-cli --log-file ${SNAP_USER_DATA}
         plugs:
             - home
             - network
@@ -46,15 +46,11 @@ parts:
             - libunbound-dev
             - libevent-dev
             - libboost-all-dev
-            - libzmqpp-dev
-            - libzmq3-dev
-            - libsodium-dev
             - libdb-dev
             - libunwind-dev
             - libminiupnpc-dev
             - libldns-dev
             - libexpat1-dev
-            - libreadline6-dev
             - bison
             - doxygen
             - graphviz
@@ -72,8 +68,8 @@ parts:
         plugin: dump
         source: .
         organize:
-            contrib/snap/monerod.conf: etc/monerod.conf
-            contrib/snap/monerod-wrapper: bin/monerod-wrapper
+            contrib/snap/fonero-daemon.conf: etc/fonero-daemon.conf
+            contrib/snap/fonero-daemon-wrapper: bin/fonero-daemon-wrapper
         prime:
             - etc
             - bin

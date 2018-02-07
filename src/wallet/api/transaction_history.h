@@ -1,6 +1,6 @@
-// Copyright (c) 2014-2018, The Monero Project
-//
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
@@ -28,10 +28,10 @@
 //
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
 
-#include "wallet/api/wallet2_api.h"
+#include "wallet/wallet2_api.h"
 #include <boost/thread/shared_mutex.hpp>
 
-namespace Monero {
+namespace Fonero {
 
 class WalletImpl;
 
@@ -55,6 +55,4 @@ private:
 };
 
 }
-
-namespace Bitmonero = Monero;
 

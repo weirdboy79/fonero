@@ -1,21 +1,21 @@
-// Copyright (c) 2014-2018, The Monero Project
-// 
-// All rights reserved.
-// 
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
+//
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright notice, this list of
 //    conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright notice, this list
 //    of conditions and the following disclaimer in the documentation and/or other
 //    materials provided with the distribution.
-// 
+//
 // 3. Neither the name of the copyright holder nor the names of its contributors may be
 //    used to endorse or promote products derived from this software without specific
 //    prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
@@ -25,7 +25,7 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
 
 #pragma once
@@ -34,8 +34,6 @@
 #include "serialization/keyvalue_serialization.h"
 #include "net/net_utils_base.h"
 #include "misc_language.h"
-#include "string_tools.h"
-#include "time_helper.h"
 #include "cryptonote_config.h"
 #ifdef ALLOW_DEBUG_COMMANDS
 #include "crypto/crypto.h"
@@ -54,7 +52,7 @@ namespace nodetool
   }
 
 #pragma pack (push, 1)
-  
+
   struct network_address_old
   {
     uint32_t ip;
@@ -113,7 +111,7 @@ namespace nodetool
 
 #pragma pack(pop)
 
-  inline 
+  inline
   std::string print_peerlist_to_string(const std::list<peerlist_entry>& pl)
   {
     time_t now_time = 0;
@@ -122,7 +120,7 @@ namespace nodetool
     ss << std::setfill ('0') << std::setw (8) << std::hex << std::noshowbase;
     for(const peerlist_entry& pe: pl)
     {
-      ss << pe.id << "\t" << pe.adr.str() << " \tlast_seen: " << epee::misc_utils::get_time_interval_string(now_time - pe.last_seen) << std::endl;
+      ss << pe.id << "\t" << pe.adr->str() << " \tlast_seen: " << epee::misc_utils::get_time_interval_string(now_time - pe.last_seen) << std::endl;
     }
     return ss.str();
   }
@@ -148,7 +146,7 @@ namespace nodetool
 
   struct basic_node_data
   {
-    uuid network_id;                   
+    uuid network_id;
     uint64_t local_time;
     uint32_t my_port;
     peerid_type peer_id;
@@ -160,7 +158,7 @@ namespace nodetool
       KV_SERIALIZE(my_port)
     END_KV_SERIALIZE_MAP()
   };
-  
+
 
 #define P2P_COMMANDS_POOL_BASE 1000
 
@@ -218,7 +216,7 @@ namespace nodetool
             std::list<peerlist_entry_base<network_address_old>> local_peerlist;
             epee::serialization::selector<is_store>::serialize_stl_container_pod_val_as_blob(local_peerlist, stg, hparent_section, "local_peerlist");
             for (const auto &p: local_peerlist)
-              ((response&)this_ref).local_peerlist_new.push_back(peerlist_entry({epee::net_utils::ipv4_network_address(p.adr.ip, p.adr.port), p.id, p.last_seen}));
+              ((response&)this_ref).local_peerlist_new.push_back(peerlist_entry({new epee::net_utils::ipv4_network_address(p.adr.ip, p.adr.port), p.id, p.last_seen}));
           }
         }
       END_KV_SERIALIZE_MAP()
@@ -277,7 +275,7 @@ namespace nodetool
             std::list<peerlist_entry_base<network_address_old>> local_peerlist;
             epee::serialization::selector<is_store>::serialize_stl_container_pod_val_as_blob(local_peerlist, stg, hparent_section, "local_peerlist");
             for (const auto &p: local_peerlist)
-              ((response&)this_ref).local_peerlist_new.push_back(peerlist_entry({epee::net_utils::ipv4_network_address(p.adr.ip, p.adr.port), p.id, p.last_seen}));
+              ((response&)this_ref).local_peerlist_new.push_back(peerlist_entry({new epee::net_utils::ipv4_network_address(p.adr.ip, p.adr.port), p.id, p.last_seen}));
           }
         }
       END_KV_SERIALIZE_MAP()
@@ -291,7 +289,7 @@ namespace nodetool
   struct COMMAND_PING
   {
     /*
-      Used to make "callback" connection, to be sure that opponent node 
+      Used to make "callback" connection, to be sure that opponent node
       have accessible connection point. Only other nodes can add peer to peerlist,
       and ONLY in case when peer has accepted connection and answered to ping.
     */
@@ -315,13 +313,13 @@ namespace nodetool
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE(status)
         KV_SERIALIZE(peer_id)
-      END_KV_SERIALIZE_MAP()    
+      END_KV_SERIALIZE_MAP()
     };
   };
 
-  
+
 #ifdef ALLOW_DEBUG_COMMANDS
-  //These commands are considered as insecure, and made in debug purposes for a limited lifetime. 
+  //These commands are considered as insecure, and made in debug purposes for a limited lifetime.
   //Anyone who feel unsafe with this commands can disable the ALLOW_GET_STAT_COMMAND macro.
 
   struct proof_of_trust
@@ -332,9 +330,9 @@ namespace nodetool
 
     BEGIN_KV_SERIALIZE_MAP()
       KV_SERIALIZE(peer_id)
-      KV_SERIALIZE(time)        
-      KV_SERIALIZE_VAL_POD_AS_BLOB(sign)  
-    END_KV_SERIALIZE_MAP()    
+      KV_SERIALIZE(time)
+      KV_SERIALIZE_VAL_POD_AS_BLOB(sign)
+    END_KV_SERIALIZE_MAP()
   };
 
 
@@ -348,9 +346,9 @@ namespace nodetool
       proof_of_trust tr;
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE(tr)
-      END_KV_SERIALIZE_MAP()    
+      END_KV_SERIALIZE_MAP()
     };
-    
+
     struct response
     {
       std::string version;
@@ -365,7 +363,7 @@ namespace nodetool
         KV_SERIALIZE(connections_count)
         KV_SERIALIZE(incoming_connections_count)
         KV_SERIALIZE(payload_info)
-      END_KV_SERIALIZE_MAP()    
+      END_KV_SERIALIZE_MAP()
     };
   };
 
@@ -382,14 +380,14 @@ namespace nodetool
       proof_of_trust tr;
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE(tr)
-      END_KV_SERIALIZE_MAP()    
+      END_KV_SERIALIZE_MAP()
     };
 
     struct response
     {
-      std::list<peerlist_entry> local_peerlist_white; 
-      std::list<peerlist_entry> local_peerlist_gray; 
-      std::list<connection_entry> connections_list; 
+      std::list<peerlist_entry> local_peerlist_white;
+      std::list<peerlist_entry> local_peerlist_gray;
+      std::list<connection_entry> connections_list;
       peerid_type my_id;
       uint64_t    local_time;
       BEGIN_KV_SERIALIZE_MAP()
@@ -398,7 +396,7 @@ namespace nodetool
         KV_SERIALIZE_CONTAINER_POD_AS_BLOB(connections_list)
         KV_SERIALIZE(my_id)
         KV_SERIALIZE(local_time)
-      END_KV_SERIALIZE_MAP()    
+      END_KV_SERIALIZE_MAP()
     };
   };
 
@@ -412,7 +410,7 @@ namespace nodetool
     struct request
     {
       BEGIN_KV_SERIALIZE_MAP()
-      END_KV_SERIALIZE_MAP()    
+      END_KV_SERIALIZE_MAP()
     };
 
     struct response
@@ -421,7 +419,7 @@ namespace nodetool
 
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE(my_id)
-      END_KV_SERIALIZE_MAP()    
+      END_KV_SERIALIZE_MAP()
     };
   };
 
@@ -435,7 +433,7 @@ namespace nodetool
     struct request
     {
       BEGIN_KV_SERIALIZE_MAP()
-      END_KV_SERIALIZE_MAP()    
+      END_KV_SERIALIZE_MAP()
     };
 
     struct response
@@ -444,10 +442,10 @@ namespace nodetool
 
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE(support_flags)
-      END_KV_SERIALIZE_MAP()    
+      END_KV_SERIALIZE_MAP()
     };
   };
-  
+
 #endif
 
 

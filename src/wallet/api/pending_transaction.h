@@ -1,6 +1,6 @@
-// Copyright (c) 2014-2018, The Monero Project
-//
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
@@ -28,14 +28,14 @@
 //
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
 
-#include "wallet/api/wallet2_api.h"
+#include "wallet/wallet2_api.h"
 #include "wallet/wallet2.h"
 
 #include <string>
 #include <vector>
 
 
-namespace Monero {
+namespace Fonero {
 
 class WalletImpl;
 class PendingTransactionImpl : public PendingTransaction
@@ -47,12 +47,9 @@ public:
     std::string errorString() const;
     bool commit(const std::string &filename = "", bool overwrite = false);
     uint64_t amount() const;
-    uint64_t dust() const;
     uint64_t fee() const;
     std::vector<std::string> txid() const;
     uint64_t txCount() const;
-    std::vector<uint32_t> subaddrAccount() const;
-    std::vector<std::set<uint32_t>> subaddrIndices() const;
     // TODO: continue with interface;
 
 private:
@@ -66,5 +63,3 @@ private:
 
 
 }
-
-namespace Bitmonero = Monero;

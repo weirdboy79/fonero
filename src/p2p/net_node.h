@@ -1,6 +1,6 @@
-// Copyright (c) 2014-2018, The Monero Project
-//
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
@@ -30,6 +30,13 @@
 
 #pragma once
 #include <boost/thread.hpp>
+#include <boost/bind.hpp>
+#include <boost/bimap.hpp>
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/identity.hpp>
+#include <boost/multi_index/member.hpp>
+#include <boost/multi_index/global_fun.hpp>
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
 #include <boost/serialization/version.hpp>
@@ -98,7 +105,7 @@ namespace nodetool
     bool init(const boost::program_options::variables_map& vm);
     bool deinit();
     bool send_stop_signal();
-    uint32_t get_this_peer_port(){return m_listening_port;}
+    uint32_t get_this_peer_port(){return m_listenning_port;}
     t_payload_net_handler& get_payload_object();
 
     template <class Archive, class t_version_type>
@@ -123,12 +130,8 @@ namespace nodetool
     virtual bool unblock_host(const epee::net_utils::network_address &address);
     virtual std::map<std::string, time_t> get_blocked_hosts() { CRITICAL_REGION_LOCAL(m_blocked_hosts_lock); return m_blocked_hosts; }
   private:
-    const std::vector<std::string> m_seed_nodes_list =
-    { "seeds.moneroseeds.se"
-    , "seeds.moneroseeds.ae.org"
-    , "seeds.moneroseeds.ch"
-    , "seeds.moneroseeds.li"
-    };
+    // TODO-TK: need to configure dns entries.
+    const std::vector<std::string> m_seed_nodes_list = {};
 
     bool islimitup=false;
     bool islimitdown=false;
@@ -211,8 +214,6 @@ namespace nodetool
     bool is_peer_used(const peerlist_entry& peer);
     bool is_peer_used(const anchor_peerlist_entry& peer);
     bool is_addr_connected(const epee::net_utils::network_address& peer);
-    void add_upnp_port_mapping(uint32_t port);
-    void delete_upnp_port_mapping(uint32_t port);
     template<class t_callback>
     bool try_ping(basic_node_data& node_data, p2p_connection_context& context, t_callback cb);
     bool try_get_support_flags(const p2p_connection_context& context, std::function<void(p2p_connection_context&, const uint32_t&)> f);
@@ -282,7 +283,7 @@ namespace nodetool
 
     bool m_have_address;
     bool m_first_connection_maker_call;
-    uint32_t m_listening_port;
+    uint32_t m_listenning_port;
     uint32_t m_external_port;
     uint32_t m_ip_address;
     bool m_allow_local_ip;
@@ -328,30 +329,8 @@ namespace nodetool
 
     bool m_testnet;
   };
-
-    const int64_t default_limit_up = 2048;
-    const int64_t default_limit_down = 8192;
-    extern const command_line::arg_descriptor<std::string> arg_p2p_bind_ip;
-    extern const command_line::arg_descriptor<std::string> arg_p2p_bind_port;
-    extern const command_line::arg_descriptor<std::string> arg_testnet_p2p_bind_port;
-    extern const command_line::arg_descriptor<uint32_t>    arg_p2p_external_port;
-    extern const command_line::arg_descriptor<bool>        arg_p2p_allow_local_ip;
-    extern const command_line::arg_descriptor<std::vector<std::string> > arg_p2p_add_peer;
-    extern const command_line::arg_descriptor<std::vector<std::string> > arg_p2p_add_priority_node;
-    extern const command_line::arg_descriptor<std::vector<std::string> > arg_p2p_add_exclusive_node;
-    extern const command_line::arg_descriptor<std::vector<std::string> > arg_p2p_seed_node;
-    extern const command_line::arg_descriptor<bool> arg_p2p_hide_my_port;
-
-    extern const command_line::arg_descriptor<bool>        arg_no_igd;
-    extern const command_line::arg_descriptor<bool>        arg_offline;
-    extern const command_line::arg_descriptor<int64_t>     arg_out_peers;
-    extern const command_line::arg_descriptor<int> arg_tos_flag;
-
-    extern const command_line::arg_descriptor<int64_t> arg_limit_rate_up;
-    extern const command_line::arg_descriptor<int64_t> arg_limit_rate_down;
-    extern const command_line::arg_descriptor<int64_t> arg_limit_rate;
-
-    extern const command_line::arg_descriptor<bool> arg_save_graph;
 }
+
+#include "net_node.inl"
 
 POP_WARNINGS

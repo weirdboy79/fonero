@@ -1,6 +1,6 @@
-// Copyright (c) 2014-2018, The Monero Project
-//
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
@@ -33,7 +33,7 @@
 
 using namespace std;
 
-namespace Monero {
+namespace Fonero {
 
 TransactionInfo::~TransactionInfo() {}
 
@@ -48,7 +48,6 @@ TransactionInfoImpl::TransactionInfoImpl()
       , m_amount(0)
       , m_fee(0)
       , m_blockheight(0)
-      , m_subaddrAccount(0)
       , m_timestamp(0)
       , m_confirmations(0)
       , m_unlock_time(0)
@@ -92,22 +91,6 @@ uint64_t TransactionInfoImpl::blockHeight() const
     return m_blockheight;
 }
 
-std::set<uint32_t> TransactionInfoImpl::subaddrIndex() const
-{
-    return m_subaddrIndex;
-}
-
-uint32_t TransactionInfoImpl::subaddrAccount() const
-{
-    return m_subaddrAccount;
-}
-
-string TransactionInfoImpl::label() const
-{
-    return m_label;
-}
-
-
 string TransactionInfoImpl::hash() const
 {
     return m_hash;
@@ -139,5 +122,3 @@ uint64_t TransactionInfoImpl::unlockTime() const
 }
 
 } // namespace
-
-namespace Bitmonero = Monero;

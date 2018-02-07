@@ -1,6 +1,6 @@
 // Copyright (c) 2006-2013, Andrey N. Sabelnikov, www.sabelnikov.net
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
 // * Redistributions of source code must retain the above copyright
@@ -11,7 +11,7 @@
 // * Neither the name of the Andrey N. Sabelnikov nor the
 // names of its contributors may be used to endorse or promote products
 // derived from this software without specific prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 // ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -22,7 +22,7 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
 
 #pragma once
 
@@ -30,8 +30,8 @@
 #include <boost/utility/value_init.hpp>
 #include "net/levin_base.h"
 
-#undef MONERO_DEFAULT_LOG_CATEGORY
-#define MONERO_DEFAULT_LOG_CATEGORY "net"
+#undef FONERO_DEFAULT_LOG_CATEGORY
+#define FONERO_DEFAULT_LOG_CATEGORY "net"
 
 namespace epee
 {
@@ -60,7 +60,8 @@ namespace epee
         LOG_ERROR("Failed to load_from_binary on command " << command);
         return false;
       }
-      return result_struct.load(stg_ret);
+      result_struct.load(stg_ret);
+      return true;
     }
 
     template<class t_arg, class t_transport>
@@ -104,7 +105,9 @@ namespace epee
         LOG_ERROR("Failed to load_from_binary on command " << command);
         return false;
       }
-      return result_struct.load(stg_ret);
+      result_struct.load(stg_ret);
+
+      return true;
     }
 
     template<class t_result, class t_arg, class callback_t, class t_transport>
@@ -114,7 +117,7 @@ namespace epee
       const_cast<t_arg&>(out_struct).store(stg);//TODO: add true const support to searilzation
       std::string buff_to_send;
       stg.store_to_binary(buff_to_send);
-      int res = transport.invoke_async(command, buff_to_send, conn_id, [cb, command](int code, const std::string& buff, typename t_transport::connection_context& context)->bool 
+      int res = transport.invoke_async(command, buff_to_send, conn_id, [cb, command](int code, const std::string& buff, typename t_transport::connection_context& context)->bool
       {
         t_result result_struct = AUTO_VAL_INIT(result_struct);
         if( code <=0 )
@@ -130,12 +133,7 @@ namespace epee
           cb(LEVIN_ERROR_FORMAT, result_struct, context);
           return false;
         }
-        if (!result_struct.load(stg_ret))
-        {
-          LOG_ERROR("Failed to load result struct on command " << command);
-          cb(LEVIN_ERROR_FORMAT, result_struct, context);
-          return false;
-        }
+        result_struct.load(stg_ret);
         cb(code, result_struct, context);
         return true;
       }, inv_timeout);
@@ -178,11 +176,7 @@ namespace epee
       boost::value_initialized<t_in_type> in_struct;
       boost::value_initialized<t_out_type> out_struct;
 
-      if (!static_cast<t_in_type&>(in_struct).load(strg))
-      {
-        LOG_ERROR("Failed to load in_struct in command " << command);
-        return -1;
-      }
+      static_cast<t_in_type&>(in_struct).load(strg);
       int res = cb(command, static_cast<t_in_type&>(in_struct), static_cast<t_out_type&>(out_struct), context);
       serialization::portable_storage strg_out;
       static_cast<t_out_type&>(out_struct).store(strg_out);
@@ -206,11 +200,7 @@ namespace epee
         return -1;
       }
       boost::value_initialized<t_in_type> in_struct;
-      if (!static_cast<t_in_type&>(in_struct).load(strg))
-      {
-        LOG_ERROR("Failed to load in_struct in notify " << command);
-        return -1;
-      }
+      static_cast<t_in_type&>(in_struct).load(strg);
       return cb(command, in_struct, context);
     }
 
@@ -219,14 +209,14 @@ namespace epee
   { \
   bool handled = false; \
   return handle_invoke_map(false, command, in_buff, buff_out, context, handled); \
-  } 
+  }
 
 #define CHAIN_LEVIN_NOTIFY_MAP2(context_type) \
   int notify(int command, const std::string& in_buff, context_type& context) \
   { \
   bool handled = false; std::string fake_str;\
   return handle_invoke_map(true, command, in_buff, fake_str, context, handled); \
-  } 
+  }
 
 
 #define CHAIN_LEVIN_INVOKE_MAP() \
@@ -234,20 +224,20 @@ namespace epee
   { \
   bool handled = false; \
   return handle_invoke_map(false, command, in_buff, buff_out, context, handled); \
-  } 
+  }
 
 #define CHAIN_LEVIN_NOTIFY_MAP() \
   int notify(int command, const std::string& in_buff, epee::net_utils::connection_context_base& context) \
   { \
   bool handled = false; std::string fake_str;\
   return handle_invoke_map(true, command, in_buff, fake_str, context, handled); \
-  } 
+  }
 
 #define CHAIN_LEVIN_NOTIFY_STUB() \
   int notify(int command, const std::string& in_buff, epee::net_utils::connection_context_base& context) \
   { \
   return -1; \
-  } 
+  }
 
 #define BEGIN_INVOKE_MAP2(owner_type) \
   template <class t_context> int handle_invoke_map(bool is_notify, int command, const std::string& in_buff, std::string& buff_out, t_context& context, bool& handled) \

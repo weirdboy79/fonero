@@ -1,7 +1,7 @@
-// Copyright (c) 2017-2018, The Monero Project
-//
-// All rights reserved.
-//
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Fonero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
+// 
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
 //
@@ -58,7 +58,7 @@ namespace
     std::memcpy(std::addressof(value), source, sizeof(T));
 
     std::stringstream out;
-    out << "BEGIN" << value << "END";  
+    out << "BEGIN" << value << "END";
     return out.str() == "BEGIN<" + std::string{expected, sizeof(T) * 2} + ">END";
   }
 }

@@ -1,9 +1,6 @@
-//#define DBG
-// Copyright (c) 2016, Monero Research Labs
-//
-// Author: Shen Noether <shen.noether@gmx.com>
-//
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
@@ -35,6 +32,8 @@
 #define RCTOPS_H
 
 #include <cstddef>
+#include <mutex>
+#include <vector>
 #include <tuple>
 
 #include "crypto/generic-ops.h"
@@ -54,6 +53,9 @@ extern "C" {
 #else
 #define DP(x)
 #endif
+
+using namespace std;
+using namespace crypto;
 
 namespace rct {
 
@@ -77,38 +79,38 @@ namespace rct {
     inline key copy(const key & A) { key AA; memcpy(&AA, &A, 32); return AA; }
 
     //initializes a key matrix;
-    //first parameter is rows, 
+    //first parameter is rows,
     //second is columns
     keyM keyMInit(size_t rows, size_t cols);
 
-    //Various key generation functions        
+    //Various key generation functions
 
     //generates a random scalar which can be used as a secret key or mask
     key skGen();
     void skGen(key &);
-    
+
     //generates a vector of secret keys of size "int"
     keyV skvGen(size_t rows );
-    
+
     //generates a random curve point (for testing)
     key pkGen();
     //generates a random secret and corresponding public key
     void skpkGen(key &sk, key &pk);
-    std::tuple<key, key> skpkGen();
+    tuple<key, key> skpkGen();
     //generates a <secret , public> / Pedersen commitment to the amount
-    std::tuple<ctkey, ctkey> ctskpkGen(xmr_amount amount);
+    tuple<ctkey, ctkey> ctskpkGen(fno_amount amount);
     //generates C =aG + bH from b, a is random
-    void genC(key & C, const key & a, xmr_amount amount);
+    void genC(key & C, const key & a, fno_amount amount);
     //this one is mainly for testing, can take arbitrary amounts..
-    std::tuple<ctkey, ctkey> ctskpkGen(const key &bH);
+    tuple<ctkey, ctkey> ctskpkGen(const key &bH);
     // make a pedersen commitment with given key
-    key commit(xmr_amount amount, const key &mask);
+    key commit(fno_amount amount, const key &mask);
     // make a pedersen commitment with zero key
-    key zeroCommit(xmr_amount amount);
+    key zeroCommit(fno_amount amount);
     //generates a random uint long long
-    xmr_amount randXmrAmount(xmr_amount upperlimit);
+    fno_amount randXmrAmount(fno_amount upperlimit);
 
-    //Scalar multiplications of curve points        
+    //Scalar multiplications of curve points
 
     //does a * G where a is a scalar and G is the curve basepoint
     void scalarmultBase(key & aG, const key &a);
@@ -123,7 +125,6 @@ namespace rct {
 
     //for curve points: AB = A + B
     void addKeys(key &AB, const key &A, const key &B);
-    rct::key addKeys(const key &A, const key &B);
     //aGB = aG + B where a is a scalar, G is the basepoint, and B is a point
     void addKeys1(key &aGB, const key &a, const key & B);
     //aGbB = aG + bB where a, b are scalars, G is the basepoint and B is a point
@@ -134,7 +135,6 @@ namespace rct {
     //aAbB = a*A + b*B where a, b are scalars, A, B are curve points
     //B must be input after applying "precomp"
     void addKeys3(key &aAbB, const key &a, const key &A, const key &b, const ge_dsmp B);
-    void addKeys3(key &aAbB, const key &a, const ge_dsmp A, const key &b, const ge_dsmp B);
     //AB = A - B where A, B are curve points
     void subKeys(key &AB, const key &A, const  key &B);
     //checks if A, B are equal as curve points
@@ -142,7 +142,7 @@ namespace rct {
 
     //Hashing - cn_fast_hash
     //be careful these are also in crypto namespace
-    //cn_fast_hash for arbitrary l multiples of 32 bytes 
+    //cn_fast_hash for arbitrary l multiples of 32 bytes
     void cn_fast_hash(key &hash, const void * data, const size_t l);
     void hash_to_scalar(key &hash, const void * data, const size_t l);
     //cn_fast_hash for a 32 byte key
@@ -156,14 +156,14 @@ namespace rct {
     key hash_to_scalar128(const void * in);
     key cn_fast_hash(const ctkeyV &PC);
     key hash_to_scalar(const ctkeyV &PC);
-    //for mg sigs 
+    //for mg sigs
     key cn_fast_hash(const keyV &keys);
     key hash_to_scalar(const keyV &keys);
     //for ANSL
     key cn_fast_hash(const key64 keys);
     key hash_to_scalar(const key64 keys);
 
-    //returns hashToPoint as described in https://github.com/ShenNoether/ge_fromfe_writeup 
+    //returns hashToPoint as described in https://github.com/ShenNoether/ge_fromfe_writeup
     key hashToPointSimple(const key &in);
     key hashToPoint(const key &in);
     void hashToPoint(key &out, const key &in);

@@ -1,6 +1,6 @@
-// Copyright (c) 2016-2018, The Monero Project
-//
-// All rights reserved.
+// Copyright (c) 2017-2018, The Fonero Project.
+// Copyright (c) 2014-2017 The Monero Project.
+// Portions Copyright (c) 2012-2013 The Cryptonote developers.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
@@ -28,10 +28,7 @@
 
 #if !defined __GNUC__ || defined __MINGW32__ || defined __MINGW64__ || defined __ANDROID__
 #define USE_UNWIND
-#else
-#define ELPP_FEATURE_CRASH_LOG 1
 #endif
-#include "easylogging++/easylogging++.h"
 
 #include <stdexcept>
 #ifdef USE_UNWIND
@@ -42,14 +39,13 @@
 #ifndef STATICLIB
 #include <dlfcn.h>
 #endif
-#include <boost/algorithm/string.hpp>
 #include "common/stack_trace.h"
 #include "misc_log_ex.h"
 
-#undef MONERO_DEFAULT_LOG_CATEGORY
-#define MONERO_DEFAULT_LOG_CATEGORY "stacktrace"
+#undef FONERO_DEFAULT_LOG_CATEGORY
+#define FONERO_DEFAULT_LOG_CATEGORY "stacktrace"
 
-#define ST_LOG(x) CINFO(el::base::Writer,el::base::DispatchAction::FileOnlyLog,MONERO_DEFAULT_LOG_CATEGORY) << x
+#define ST_LOG(x) CINFO(el::base::Writer,el::base::DispatchAction::FileOnlyLog,FONERO_DEFAULT_LOG_CATEGORY) << x
 
 // from http://stackoverflow.com/questions/11665829/how-can-i-print-stack-trace-for-caught-exceptions-in-c-code-injection-in-c
 

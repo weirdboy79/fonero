@@ -1,7 +1,7 @@
-# Copyright (c) 2014-2018, The Monero Project
-# 
-# All rights reserved.
-# 
+# Copyright (c) 2017-2018, The Fonero Project.
+# Copyright (c) 2014-2017 The Monero Project.
+# Portions Copyright (c) 2012-2013 The Cryptonote developers.
+#
 # Redistribution and use in source and binary forms, with or without modification, are
 # permitted provided that the following conditions are met:
 # 
@@ -30,7 +30,6 @@
 
 # The docs say this only affects grouping in IDEs
 set(folder "tests")
-set(TEST_DATA_DIR "${CMAKE_CURRENT_LIST_DIR}/data")
 
 if (WIN32 AND STATIC)
   add_definitions(-DSTATICLIB)
@@ -73,8 +72,8 @@ file(COPY
   data/wallet_9svHk1.keys
   data/wallet_9svHk1
   data/outputs
-  data/unsigned_monero_tx
-  data/signed_monero_tx
+  data/unsigned_fonero_tx
+  data/signed_fonero_tx
   DESTINATION data)
 
 add_subdirectory(core_tests)
@@ -87,9 +86,7 @@ add_subdirectory(unit_tests)
 add_subdirectory(difficulty)
 add_subdirectory(hash)
 add_subdirectory(net_load_tests)
-if (BUILD_GUI_DEPS)
-  add_subdirectory(libwallet_api_tests)
-endif()
+add_subdirectory(libwallet_api_tests)
 
 # add_subdirectory(daemon_tests)
 
@@ -113,7 +110,7 @@ add_test(
   COMMAND hash-target-tests)
 
 set(enabled_tests
-    core_tests
+    coretests
     difficulty
     hash
     performance_tests

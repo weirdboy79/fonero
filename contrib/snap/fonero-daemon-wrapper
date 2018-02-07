@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ ! -d "$SNAP_USER_DATA/etc" ]; then
+  mkdir $SNAP_USER_DATA/etc/
+  cp -R $SNAP/etc/fonero-daemon.conf $SNAP_USER_DATA/etc/fonero-daemon.conf
+fi
+
+exec "$SNAP/bin/fonero-daemon" "$@"
