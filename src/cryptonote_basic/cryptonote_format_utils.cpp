@@ -661,10 +661,11 @@ namespace cryptonote
     return p;
   }
   //---------------------------------------------------------------
-  bool get_block_longhash(const block& b, crypto::hash& res, uint64_t height)
+  bool get_block_longhash(const block& b, crypto::hash& res, uint64_t height, uint8_t hf_version)
   {
     blobdata bd = get_block_hashing_blob(b);
-    crypto::cn_slow_hash(bd.data(), bd.size(), res);
+    const int variant = hf_version >= 3 ? 1 : 0;
+    crypto::cn_slow_hash(bd.data(), bd.size(), res, variant);
     return true;
   }
   //---------------------------------------------------------------
@@ -688,10 +689,10 @@ namespace cryptonote
     return res;
   }
   //---------------------------------------------------------------
-  crypto::hash get_block_longhash(const block& b, uint64_t height)
+  crypto::hash get_block_longhash(const block& b, uint64_t height, uint8_t hf_version)
   {
     crypto::hash p = null_hash;
-    get_block_longhash(b, p, height);
+    get_block_longhash(b, p, height, hf_version);
     return p;
   }
   //---------------------------------------------------------------

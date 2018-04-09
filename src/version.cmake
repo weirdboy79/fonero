@@ -39,7 +39,7 @@ if(RET)
     configure_file("src/version.h.in" "${TO}")
 else()
 	message(STATUS "You are currently on commit ${COMMIT}")
-	
+
 	# Get all the tags
 	execute_process(COMMAND "${GIT}" rev-list --tags --max-count=1 --abbrev-commit RESULT_VARIABLE RET OUTPUT_VARIABLE TAGGEDCOMMIT OUTPUT_STRIP_TRAILING_WHITESPACE)
 	

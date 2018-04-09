@@ -88,7 +88,8 @@ static const struct {
   time_t time;
 } mainnet_hard_forks[] = {
   { 1, 1, 0, 1510160262 },
-  { 2, 10537, 0, 1511328836 }
+  { 2, 10537, 0, 1511328836 },
+  { 3, 112000, 0, 1523318400 }
 };
 
 static const struct {
@@ -98,7 +99,8 @@ static const struct {
   time_t time;
 } testnet_hard_forks[] = {
   { 1, 1, 0, 1510160283 },
-  { 2, 4, 0, 1511328836 }
+  { 2, 4, 0, 1511328836 },
+  { 3, 42279, 0, 1523318400 }
 };
 
 //------------------------------------------------------------------
@@ -1288,7 +1290,7 @@ bool Blockchain::handle_alternative_block(const block& b, const crypto::hash& id
     difficulty_type current_diff = get_next_difficulty_for_alternative_chain(alt_chain, bei);
     CHECK_AND_ASSERT_MES(current_diff, false, "!!!!!!! DIFFICULTY OVERHEAD !!!!!!!");
     crypto::hash proof_of_work = null_hash;
-    get_block_longhash(bei.bl, proof_of_work, bei.height);
+    get_block_longhash(bei.bl, proof_of_work, bei.height, m_hardfork->get_current_version());
     if(!check_hash(proof_of_work, current_diff))
     {
       MERROR_VER("Block with id: " << id << std::endl << " for alternative chain, does not have enough proof of work: " << proof_of_work << std::endl << " expected difficulty: " << current_diff);
@@ -2935,7 +2937,7 @@ leave:
       proof_of_work = it->second;
     }
     else
-      proof_of_work = get_block_longhash(bl, m_db->height());
+      proof_of_work = get_block_longhash(bl, m_db->height(), m_hardfork->get_current_version());
 
     // validate proof_of_work versus difficulty target
     if(!check_hash(proof_of_work, current_diffic))
@@ -3309,7 +3311,7 @@ void Blockchain::block_longhash_worker(uint64_t height, const std::vector<block>
     if (m_cancel)
        break;
     crypto::hash id = get_block_hash(block);
-    crypto::hash pow = get_block_longhash(block, height++);
+    crypto::hash pow = get_block_longhash(block, height++, m_hardfork->get_current_version());
     map.emplace(id, pow);
   }
 
