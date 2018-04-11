@@ -10,7 +10,7 @@ Portions Copyright (c) 2012-2013 The Cryptonote developers.
 
 - Web: [http://fonero.org](http://fonero.org)
 - Blocks: [http://blocks.fonero.org](http://blocks.fonero.org)
-- Pool: [http://pool.fonero.org](http://pool.fonero.org)
+- Pool: [http://pool.fonero.org](http://pool.fonero.org) - closed!
 - Faucet: [http://faucet.fonero.org](http://faucet.fonero.org)
 - Online wallet: [https://fonero.online](https://fonero.online)
 
@@ -18,9 +18,6 @@ Portions Copyright (c) 2012-2013 The Cryptonote developers.
 - GitHub: [https://github.com/fonero-project/fonero](https://github.com/fonero-project/fonero)
 - GitHub Pool: [https://github.com/fonero-project/fonero-pool](https://github.com/fonero-project/fonero-pool)
 - GitHub Node-Cryptonote-Util: [https://github.com/fonero-project/node-cryptonote-util](https://github.com/fonero-project/node-cryptonote-util)
-
-- Windows 32-bit: [fonero-wallet-x86.zip](http://fonero.org/fonero-wallet-x86.zip)
-- Windows 64-bit: [fonero-wallet-x64.zip](http://fonero.org/fonero-wallet-x64.zip)
 
 ## Specifications
 - Coin name: Fonero
