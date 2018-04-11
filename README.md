@@ -10,8 +10,8 @@ Portions Copyright (c) 2012-2013 The Cryptonote developers.
 
 - Web: [http://fonero.org](http://fonero.org)
 - Blocks: [http://blocks.fonero.org](http://blocks.fonero.org)
-- Pool: [http://pool.fonero.org](http://pool.fonero.org) - closed!
-- Faucet: [http://faucet.fonero.org](http://faucet.fonero.org)
+- Pool: [http://pool.fonero.org](http://pool.fonero.org)
+- Faucet: [http://faucet.fonero.org](http://faucet.fonero.org) - closed!
 - Online wallet: [https://fonero.online](https://fonero.online)
 
 
