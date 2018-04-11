@@ -17,7 +17,7 @@ Portions Copyright (c) 2012-2013 The Cryptonote developers.
 
 - GitHub: [https://github.com/fonero-project/fonero](https://github.com/fonero-project/fonero)
 - GitHub Pool: [https://github.com/fonero-project/fonero-pool](https://github.com/fonero-project/fonero-pool)
-- GitHub Node-Cryptonote-Util: [https://github.com/fonero-project/node-cryptonote-util](https://github.com/fonero-project/node-cryptonote-util)
+- GitHub Node-Cryptonote-Util: [https://github.com/romankosoj/node-cryptonote-util](https://github.com/romankosoj/node-cryptonote-util)
 
 ## Specifications
 - Coin name: Fonero
